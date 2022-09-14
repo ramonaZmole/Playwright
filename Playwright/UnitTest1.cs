@@ -23,6 +23,10 @@ namespace PlaywrightNUnit
 
             await page.GotoAsync("https://automationintesting.online/");
             await page.ClickAsync(".row.hotel-room-info [type='button']");
+            await page.ScreenshotAsync(new PageScreenshotOptions
+            {
+                Path = "screenshot.jpg"
+            });
         }
     }
 }
