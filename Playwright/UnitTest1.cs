@@ -1,4 +1,6 @@
-namespace Playwright
+using Microsoft.Playwright;
+
+namespace PlaywrightNUnit
 {
     public class Tests
     {
@@ -13,9 +15,16 @@ namespace Playwright
         }
 
         [Test]
-        public void Test1()
+        public async Task Test1()
         {
-            Assert.Pass();
+            using var playwright = await Playwright.CreateAsync();
+
+            await using var browser = await playwright.Chromium.LaunchAsync();
+
+            var page = await browser.NewPageAsync();
+
+            await page.GotoAsync("https://automationintesting.online/");
+            await page.ClickAsync(".row.hotel-room-info [type='button']");
         }
     }
 }
