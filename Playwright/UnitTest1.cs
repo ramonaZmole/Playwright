@@ -5,6 +5,11 @@ namespace Playwright
         [SetUp]
         public void Setup()
         {
+            //arrange
+
+            //act
+
+            //assert
         }
 
         [Test]
