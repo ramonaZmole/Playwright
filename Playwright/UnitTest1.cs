@@ -7,11 +7,6 @@ namespace PlaywrightNUnit
         [SetUp]
         public void Setup()
         {
-            //arrange
-
-            //act
-
-            //assert
         }
 
         [Test]
@@ -19,7 +14,10 @@ namespace PlaywrightNUnit
         {
             using var playwright = await Playwright.CreateAsync();
 
-            await using var browser = await playwright.Chromium.LaunchAsync();
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+            {
+                Headless = false
+            });
 
             var page = await browser.NewPageAsync();
 
