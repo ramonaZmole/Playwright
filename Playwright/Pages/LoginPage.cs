@@ -16,6 +16,19 @@ public class LoginPage
     {
         await UsernameInput.FillAsync("admin");
         await PasswordInput.FillAsync("password");
-        await LoginButton.ClickAsync();
+        //  await Page.RunAndWaitForNavigationAsync(async () => { await LoginButton.ClickAsync(); });
+
+
+        await Page.RunAndWaitForResponseAsync(async () =>
+        {
+            await LoginButton.ClickAsync();
+        }, x => x.Status == 200);
+
+
+        //   await LoginButton.ClickAsync();
+        //   var wait = Page.WaitForResponseAsync("**/login");
+
+        //   await Page.WaitForSelectorAsync("#brandingLink");
+        //   var response = await wait;
     }
 }

@@ -1,11 +1,10 @@
-using Microsoft.Playwright.NUnit;
 using PlaywrightNUnit.Pages;
 
 namespace PlaywrightNUnit.Tests;
 
 public class Pom
 {
-    //private IPage _page;
+    private IPage _page;
 
     [SetUp]
     public Task Setup()
@@ -20,7 +19,7 @@ public class Pom
 
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            //  Headless = false
+            Headless = false
         });
         var _page = await browser.NewPageAsync();
 
@@ -28,14 +27,17 @@ public class Pom
 
         await _page.GotoAsync("https://automationintesting.online/#/admin");
         await loginPage.Login();
-        await _page.WaitForSelectorAsync("#brandingLink");
-
 
         Assert.IsTrue(await _page.Locator("#brandingLink").IsVisibleAsync());
+    }
 
+    [TearDown]
+    public async Task TearDown()
+    {
         //await _page.ScreenshotAsync(new PageScreenshotOptions
         //{
-        //    Path = "screenshot3.jpg"
+        //    Path = "screenshot.jpg"
         //});
+
     }
 }
