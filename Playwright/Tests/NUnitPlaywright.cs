@@ -21,6 +21,7 @@ public class NUnitPlayWright : PageTest
         var loginButton = Page.Locator("button", new PageLocatorOptions { HasTextString = "Login" });
         await loginButton.ClickAsync();
         //  await Page.ClickAsync("#doLogin");
+        await Page.WaitForSelectorAsync("#brandingLink");
 
         await Expect(Page.Locator("#brandingLink")).ToBeVisibleAsync(new LocatorAssertionsToBeVisibleOptions{Timeout = 10});
 

@@ -23,7 +23,7 @@ public class Tests
         await page.FillAsync("#username", "admin");
         await page.FillAsync("#password", "password");
         await page.ClickAsync("#doLogin");
-
+        await page.WaitForSelectorAsync("#brandingLink");
         Assert.IsTrue(await page.Locator("#brandingLink").IsVisibleAsync());
 
         //await page.ScreenshotAsync(new PageScreenshotOptions

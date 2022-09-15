@@ -28,6 +28,8 @@ public class Pom
 
         await _page.GotoAsync("https://automationintesting.online/#/admin");
         await loginPage.Login();
+        await _page.WaitForSelectorAsync("#brandingLink");
+
 
         Assert.IsTrue(await _page.Locator("#brandingLink").IsVisibleAsync());
 
