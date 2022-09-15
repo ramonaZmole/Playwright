@@ -14,11 +14,16 @@ namespace PlaywrightNUnit
         [Test]
         public async Task Test2PageTestInherited()
         {
-            await Page.FillAsync("#username", "admin");
-            await Page.FillAsync("#password", "password");
-            await Page.ClickAsync("#doLogin");
+            var usernameInput = Page.Locator("#username");
 
-            await Expect(Page.Locator("#brandingLink")).ToBeVisibleAsync();
+            await usernameInput.FillAsync("admin");
+            await Page.FillAsync("#password", "password");
+
+            var loginButton = Page.Locator("button", new PageLocatorOptions { HasTextString = "Login" });
+            await loginButton.ClickAsync();
+            //  await Page.ClickAsync("#doLogin");
+
+            await Expect(Page.Locator("#brandingLink")).ToBeVisibleAsync(new LocatorAssertionsToBeVisibleOptions{Timeout = 10});
 
             await Page.ScreenshotAsync(new PageScreenshotOptions
             {
