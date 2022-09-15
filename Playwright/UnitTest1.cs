@@ -10,13 +10,13 @@ namespace PlaywrightNUnit
         }
 
         [Test]
-        public async Task Test1()
+        public async Task Test1RawPlaywright()
         {
             using var playwright = await Playwright.CreateAsync();
 
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                Headless = false
+                // Headless = false
             });
 
             var page = await browser.NewPageAsync();

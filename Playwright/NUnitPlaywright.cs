@@ -12,7 +12,7 @@ namespace PlaywrightNUnit
         }
 
         [Test]
-        public async Task Test1()
+        public async Task Test2PageTestInherited()
         {
             await Page.FillAsync("#username", "admin");
             await Page.FillAsync("#password", "password");
