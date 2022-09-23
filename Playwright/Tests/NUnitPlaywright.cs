@@ -1,6 +1,6 @@
 using Microsoft.Playwright.NUnit;
 
-namespace PlaywrightNUnit;
+namespace PlaywrightNUnit.Tests;
 
 public class NUnitPlayWright : PageTest
 {

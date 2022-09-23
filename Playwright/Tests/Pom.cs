@@ -6,11 +6,6 @@ public class Pom
 {
     private IPage _page;
 
-    [SetUp]
-    public Task Setup()
-    {
-        return Task.CompletedTask;
-    }
 
     [Test]
     public async Task Test3Pom()
