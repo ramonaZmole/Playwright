@@ -22,12 +22,20 @@ public class RoomsPage
 
     private ILocator LastRoomDetails => _page.Locator("#root > div:nth-child(2) div:nth-last-child(2) .row.detail div p");
 
+    private string LastRoomDetailsstring = "#root > div:nth-child(2) div:nth-last-child(2) .row.detail div p";
+
     #endregion
 
     public RoomsPage(IPage page) => _page = page;
 
 
-    public async Task CreateRoom() => await CreateButton.ClickAsync();
+    public async Task CreateRoom()
+    {
+        await _page.RunAndWaitForResponseAsync(async () =>
+        {
+            await CreateButton.ClickAsync();
+        }, x => x.Status == 200);
+    }
 
     public async Task FillForm(CreateRoomModel createRoomModel)
     {
@@ -42,16 +50,11 @@ public class RoomsPage
 
     public async Task<CreateRoomModel> GetLastCreatedRoomDetails()
     {
-        //  await _page.Locator().WaitForAsync();
-
-        var locator = _page.Locator("#root > div:nth-child(2) div:nth-last-child(2) .row.detail div p");
-        await locator.First.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible });
-
         var roomDetails = new List<string?>();
 
-        for (var i = 0; i < await locator.CountAsync().WaitAsync(TimeSpan.FromSeconds(1)); i++)
+        for (var i = 0; i < await LastRoomDetails.CountAsync(); i++)
         {
-            roomDetails.Add(await locator.Nth(i).TextContentAsync());
+            roomDetails.Add(await LastRoomDetails.Nth(i).TextContentAsync());
         }
 
         return new CreateRoomModel

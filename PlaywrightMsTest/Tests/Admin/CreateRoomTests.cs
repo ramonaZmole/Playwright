@@ -24,7 +24,9 @@ namespace PlaywrightMsTest.Tests.Admin
 
             await _roomsPage.FillForm(_roomModel);
             await _roomsPage.CreateRoom();
-            _roomsPage.GetLastCreatedRoomDetails().Result.Should().BeEquivalentTo(_roomModel);
+            var roomDetails = await _roomsPage.GetLastCreatedRoomDetails();
+            roomDetails.Should().BeEquivalentTo(_roomModel);
+            //_roomsPage.GetLastCreatedRoomDetails().Result.Should().BeEquivalentTo(_roomModel); not working
         }
 
         [TestMethod]
@@ -37,7 +39,10 @@ namespace PlaywrightMsTest.Tests.Admin
 
             await _roomsPage.FillForm(_roomModel);
             await _roomsPage.CreateRoom();
-            //  _roomsPage.GetLastCreatedRoomDetails().RoomDetails.Should().Be("No features added to the room");
+            //  _roomsPage.GetLastCreatedRoomDetails().Result.RoomDetails.Should().Be("No features added to the room");
+
+            var roomDetails = await _roomsPage.GetLastCreatedRoomDetails();
+            roomDetails.RoomDetails.Should().Be("No features added to the room");
         }
     }
 }
