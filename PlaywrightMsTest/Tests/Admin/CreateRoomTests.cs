@@ -13,7 +13,7 @@ public class CreateRoomTests : BaseTest
     [TestMethod]
     public async Task WhenCreatingARoom_RoomShouldBeSavedTes()
     {
-        await GoTo(Constants.AdminUrl);
+        await Browser.GoTo(Constants.AdminUrl);
         await LoginPage.Login();
 
         await RoomsPage.CreateRoom();
@@ -31,7 +31,7 @@ public class CreateRoomTests : BaseTest
     {
         _roomModel.RoomDetails = string.Empty;
 
-        await GoTo(Constants.AdminUrl);
+        await Browser.GoTo(Constants.AdminUrl);
         await LoginPage.Login();
 
         await RoomsPage.FillForm(_roomModel);

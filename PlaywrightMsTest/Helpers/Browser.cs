@@ -2,7 +2,7 @@
 
 namespace PlaywrightMsTest.Helpers;
 
-public static class Browser
+public class Browser
 {
     //[ThreadStatic]
     //public static IBrowser WebDriver;
@@ -29,18 +29,28 @@ public static class Browser
     //public static async Task Dispose() => await WebDriver.CloseAsync();
 
 
-    private static IBrowser? _browser;
+    private readonly Task<IPage> _page;
+    private IBrowser? _browser;
 
-    public static void Dispose() => _browser?.CloseAsync();
+    public Browser() => _page = Task.Run(InitializePlaywright);
 
-    public static async Task<IPage> InitializePlaywright(BrowserTypeLaunchOptions browserTypeLaunchOptions)
+    public IPage Page => _page.Result;
+
+    public void Dispose() => _browser?.CloseAsync();
+
+    private async Task<IPage> InitializePlaywright()
     {
+        //Playwright
         var playwright = await Playwright.CreateAsync();
+        //Browser
         _browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = browserTypeLaunchOptions.Headless
+            Headless = false
         });
+        //Page
         return await _browser.NewPageAsync();
     }
+
+    public async Task GoTo(string url) => await Page.GotoAsync(url);
 
 }
