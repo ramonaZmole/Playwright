@@ -1,48 +1,44 @@
 ﻿using FluentAssertions;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
-using PlaywrightMsTest.Pages;
 
-namespace PlaywrightMsTest.Tests.Admin
+namespace PlaywrightMsTest.Tests.Admin;
+
+[TestClass]
+public class CreateRoomTests : BaseTest
 {
-    [TestClass]
-    public class CreateRoomTests : BaseTest
+    private readonly CreateRoomModel _roomModel = new();
+
+
+    [TestMethod]
+    public async Task WhenCreatingARoom_RoomShouldBeSavedTes()
     {
-        private readonly LoginPage _loginPage = new(Browser.Page);
-        private readonly RoomsPage _roomsPage = new(Browser.Page);
-        private readonly CreateRoomModel _roomModel = new();
+        await GoTo(Constants.AdminUrl);
+        await LoginPage.Login();
 
+        await RoomsPage.CreateRoom();
+        RoomsPage.IsErrorMessageDisplayed().Result.Should().BeTrue();
 
-        [TestMethod]
-        public async Task WhenCreatingARoom_RoomShouldBeSavedTes()
-        {
-            await Browser.GoTo(Constants.AdminUrl);
-            await _loginPage.Login();
+        await RoomsPage.FillForm(_roomModel);
+        await RoomsPage.CreateRoom();
+        var roomDetails = await RoomsPage.GetLastCreatedRoomDetails();
+        roomDetails.Should().BeEquivalentTo(_roomModel);
+        //_roomsPage.GetLastCreatedRoomDetails().Result.Should().BeEquivalentTo(_roomModel); not working
+    }
 
-            await _roomsPage.CreateRoom();
-            _roomsPage.IsErrorMessageDisplayed().Result.Should().BeTrue();
+    [TestMethod]
+    public async Task WhenCreatingRoomWithNoRoomDetails_NoFeaturesShouldBeDisplayedTest()
+    {
+        _roomModel.RoomDetails = string.Empty;
 
-            await _roomsPage.FillForm(_roomModel);
-            await _roomsPage.CreateRoom();
-            var roomDetails = await _roomsPage.GetLastCreatedRoomDetails();
-            roomDetails.Should().BeEquivalentTo(_roomModel);
-            //_roomsPage.GetLastCreatedRoomDetails().Result.Should().BeEquivalentTo(_roomModel); not working
-        }
+        await GoTo(Constants.AdminUrl);
+        await LoginPage.Login();
 
-        [TestMethod]
-        public async Task WhenCreatingRoomWithNoRoomDetails_NoFeaturesShouldBeDisplayedTest()
-        {
-            _roomModel.RoomDetails = string.Empty;
+        await RoomsPage.FillForm(_roomModel);
+        await RoomsPage.CreateRoom();
+        //  _roomsPage.GetLastCreatedRoomDetails().Result.RoomDetails.Should().Be("No features added to the room");
 
-            await Browser.GoTo(Constants.AdminUrl);
-            await _loginPage.Login();
-
-            await _roomsPage.FillForm(_roomModel);
-            await _roomsPage.CreateRoom();
-            //  _roomsPage.GetLastCreatedRoomDetails().Result.RoomDetails.Should().Be("No features added to the room");
-
-            var roomDetails = await _roomsPage.GetLastCreatedRoomDetails();
-            roomDetails.RoomDetails.Should().Be("No features added to the room");
-        }
+        var roomDetails = await RoomsPage.GetLastCreatedRoomDetails();
+        roomDetails.RoomDetails.Should().Be("No features added to the room");
     }
 }

@@ -1,38 +1,28 @@
 ﻿using Microsoft.Playwright;
 
-namespace PlaywrightMsTest.Helpers
+namespace PlaywrightMsTest.Helpers;
+
+public static class Browser
 {
-    public class Browser : IDisposable
+    [ThreadStatic]
+    public static IBrowser WebDriver;
+
+    public static void InitializeDriver(bool headless = false)
     {
-        private readonly Task<IPage> _page;
-        private IBrowser? _browser;
+        WebDriver = headless == false ? Task.Run(() => GetBrowserAsync(headless: false)).Result
+            : Task.Run(() => GetBrowserAsync(headless: true)).Result;
+    }
 
-        public Browser() => _page = Task.Run(InitializePlaywright);
+    private static async Task<IBrowser> GetBrowserAsync(bool headless = false)
+    {
+        var playwright = await Playwright.CreateAsync();
 
-        public IPage Page => _page.Result;
+        IBrowser browser;
 
-     //   public static readonly B = new();
-
-        private async Task<IPage> InitializePlaywright()
-        {
-            //Playwright
-            var playwright = await Playwright.CreateAsync();
-
-            //Browser
-            _browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-            {
-                Headless = false
-            });
-
-            //Page
-            return await _browser.NewPageAsync();
-        }
-
-        public async Task GoTo(string url) => await Page.GotoAsync(url);
-
-
-        public void Dispose() => _browser?.CloseAsync();
-
-
+        if (headless)
+            browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
+        else
+            browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, SlowMo = 1000 });
+        return browser;
     }
 }

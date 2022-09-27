@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PlaywrightMsTest.Helpers;
+﻿namespace PlaywrightMsTest.Tests;
 
-namespace PlaywrightMsTest.Tests
+internal class Pages
 {
-    internal class Pages
-    {
 
-       }
 }

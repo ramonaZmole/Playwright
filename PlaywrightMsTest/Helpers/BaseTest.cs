@@ -1,12 +1,40 @@
-﻿namespace PlaywrightMsTest.Helpers
-{
-    public class BaseTest
-    {
-        public static Browser Browser = new Browser();
+﻿using Microsoft.Playwright;
+using PlaywrightMsTest.Pages;
 
-        //[TestInitialize]
-        //public async Task Before()
-        //{
-        //}
+
+//[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+namespace PlaywrightMsTest.Helpers;
+
+public class BaseTest
+{
+    private static IPage _page;
+
+
+    public LoginPage LoginPage;
+    public RoomsPage RoomsPage;
+
+
+    [TestInitialize]
+    public async Task Before()
+    {
+        Browser.InitializeDriver(true);
+        _page = await Browser.WebDriver.NewPageAsync();
+        //  _page = await Browser.InitializePage();
+        //   await page.SetViewportSizeAsync(1920, 1080);
+        InitializePages();
+    }
+
+
+    [TestCleanup]
+    public void After() => Browser.WebDriver.CloseAsync();
+
+
+    public static async Task GoTo(string url) => await _page.GotoAsync(url);
+
+
+    private void InitializePages()
+    {
+        LoginPage = new LoginPage(_page);
+        RoomsPage = new RoomsPage(_page);
     }
 }
