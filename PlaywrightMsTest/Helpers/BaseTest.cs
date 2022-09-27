@@ -2,13 +2,11 @@
 using PlaywrightMsTest.Pages;
 
 
-//[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 namespace PlaywrightMsTest.Helpers;
 
 public class BaseTest
 {
-    // private IPage Page;
-
     public LoginPage LoginPage;
     public RoomsPage RoomsPage;
 
@@ -16,25 +14,13 @@ public class BaseTest
 
 
     [TestInitialize]
-    public async Task Before()
+    public void Before()
     {
-        //Page = await Browser.InitializePlaywright(new BrowserTypeLaunchOptions
-        //{
-        //    Headless = false
-        //});
-
-
         InitializePages();
-
-
     }
-
 
     [TestCleanup]
     public void After() => Browser.Dispose();
-
-
-
 
     private void InitializePages()
     {
