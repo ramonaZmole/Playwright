@@ -2,13 +2,12 @@
 using PlaywrightMsTest.Pages;
 
 
-//[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 namespace PlaywrightMsTest.Helpers;
 
 public class BaseTest
 {
-    private static IPage _page;
-
+    private IPage Page;
 
     public LoginPage LoginPage;
     public RoomsPage RoomsPage;
@@ -17,24 +16,24 @@ public class BaseTest
     [TestInitialize]
     public async Task Before()
     {
-        Browser.InitializeDriver(true);
-        _page = await Browser.WebDriver.NewPageAsync();
-        //  _page = await Browser.InitializePage();
-        //   await page.SetViewportSizeAsync(1920, 1080);
+        Page = await Browser.InitializePlaywright(new BrowserTypeLaunchOptions
+        {
+            Headless = false
+        });
         InitializePages();
     }
 
 
     [TestCleanup]
-    public async Task After() => await Browser.Dispose();
+    public void After() => Browser.Dispose();
 
 
-    public static async Task GoTo(string url) => await _page.GotoAsync(url);
+    public async Task GoTo(string url) => await Page.GotoAsync(url);
 
 
     private void InitializePages()
     {
-        LoginPage = new LoginPage(_page);
-        RoomsPage = new RoomsPage(_page);
+        LoginPage = new LoginPage(Page);
+        RoomsPage = new RoomsPage(Page);
     }
 }
