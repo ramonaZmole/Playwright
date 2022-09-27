@@ -25,4 +25,6 @@ public static class Browser
             browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, SlowMo = 1000 });
         return browser;
     }
+
+    public static async Task Dispose() => await WebDriver.CloseAsync();
 }

@@ -26,7 +26,7 @@ public class BaseTest
 
 
     [TestCleanup]
-    public void After() => Browser.WebDriver.CloseAsync();
+    public async Task After() => await Browser.Dispose();
 
 
     public static async Task GoTo(string url) => await _page.GotoAsync(url);
