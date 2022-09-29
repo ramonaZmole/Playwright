@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
+using Newtonsoft.Json;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
+using PlaywrightMsTest.Helpers.Model.ApiModels;
 
 namespace PlaywrightMsTest.Tests.Admin;
 
@@ -36,9 +38,21 @@ public class CreateRoomTests : BaseTest
 
         await RoomsPage.FillForm(_roomModel);
         await RoomsPage.CreateRoom();
-        //  _roomsPage.GetLastCreatedRoomDetails().Result.RoomDetails.Should().Be("No features added to the room");
+        // RoomsPage.GetLastCreatedRoomDetails().Result.RoomDetails.Should().Be("No features added to the room");
 
         var roomDetails = await RoomsPage.GetLastCreatedRoomDetails();
         roomDetails.RoomDetails.Should().Be("No features added to the room");
+    }
+
+
+    [TestCleanup]
+    public override async Task After()
+    {
+        await base.After();
+        var response = await RequestContext.Result.GetAsync(ApiResource.Room).Result.JsonAsync();
+        var rooms = JsonConvert.DeserializeObject<GetRoomsOutput>(response.ToString());
+
+        var id = rooms.rooms.First(x => x.roomName == int.Parse(_roomModel.RoomName)).roomid;
+        await RequestContext.Result.DeleteAsync($"{ApiResource.Room}{id}");
     }
 }

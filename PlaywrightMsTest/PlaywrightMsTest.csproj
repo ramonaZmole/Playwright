@@ -18,4 +18,19 @@
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Helpers\ApiResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Helpers\ApiResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ApiResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

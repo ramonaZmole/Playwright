@@ -11,7 +11,7 @@ public class Browser
 
     public IPage Page => _page.Result;
 
-    public void Dispose() => _browser?.CloseAsync();
+    public async Task Dispose() => await _browser.CloseAsync();
 
     private async Task<IPage> InitializePlaywright()
     {

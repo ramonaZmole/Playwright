@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
@@ -17,12 +15,9 @@ public class RoomsPage
     private ILocator TypeDropDown => _page.Locator("#type");
     private ILocator AccessibleDropDown => _page.Locator("#accessible");
     private ILocator RoomPriceInput => _page.Locator("#roomPrice");
-    // private ILocator RoomDetailsLabels => _page.Locator(".form-check-label");
     private ILocator ErrorMessage => _page.Locator(".alert ");
 
-    private ILocator LastRoomDetails => _page.Locator("#root > div:nth-child(2) div:nth-last-child(2) .row.detail div p");
-
-    private string LastRoomDetailsstring = "#root > div:nth-child(2) div:nth-last-child(2) .row.detail div p";
+    private const string LastRoomDetails = "#root > div:nth-child(2) div:nth-last-child(2) .row.detail div p";
 
     #endregion
 
@@ -50,11 +45,13 @@ public class RoomsPage
 
     public async Task<CreateRoomModel> GetLastCreatedRoomDetails()
     {
+        var lastRoomDetails = _page.Locator(LastRoomDetails);
+
         var roomDetails = new List<string?>();
 
-        for (var i = 0; i < await LastRoomDetails.CountAsync(); i++)
+        for (var i = 0; i < await lastRoomDetails.CountAsync(); i++)
         {
-            roomDetails.Add(await LastRoomDetails.Nth(i).TextContentAsync());
+            roomDetails.Add(await lastRoomDetails.Nth(i).TextContentAsync());
         }
 
         return new CreateRoomModel
@@ -71,7 +68,7 @@ public class RoomsPage
     {
         var errorMessage = await ErrorMessage.TextContentAsync();
 
-        return// ErrorMessage.IsElementPresent()
+        return await ErrorMessage.IsVisibleAsync() &&
                errorMessage.Contains("must be greater than or equal to 1")
                && errorMessage.Contains("Room name must be set");
     }
