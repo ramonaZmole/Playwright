@@ -29,9 +29,10 @@ public class RoomsPage
     {
         await _page.RunAndWaitForResponseAsync(async () =>
         {
-          //  await _page.WaitForSelectorAsync(CreateButton);
+            await _page.WaitForSelectorAsync(CreateButton);
             await _page.Locator(CreateButton).ClickAsync();
-        }, x => x.Status == 200);
+            // await CreateButton.ClickAsync();
+        }, x => x.Status is 200 or 400);
     }
 
     public async Task FillForm(CreateRoomModel createRoomModel)
@@ -47,6 +48,7 @@ public class RoomsPage
 
     public async Task<CreateRoomModel> GetLastCreatedRoomDetails()
     {
+        await _page.WaitForSelectorAsync(LastRoomDetails);
         var lastRoomDetails = _page.Locator(LastRoomDetails);
 
         var roomDetails = new List<string?>();
