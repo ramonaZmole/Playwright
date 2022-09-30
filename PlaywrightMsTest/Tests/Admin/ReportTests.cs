@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model.ApiModels;
+using PlaywrightMsTest.Pages;
 
 namespace PlaywrightMsTest.Tests.Admin;
 
@@ -9,6 +10,11 @@ public class ReportTests : BaseTest
 {
     private CreateRoomOutput _createRoomOutput;
     private CreateBookingInput _bookingInput;
+
+    //LoginPage LoginPage = new LoginPage(Browser.Page);
+    //RoomsPage RoomsPage = new RoomsPage(Browser.Page);
+    //AdminHeaderPage AdminHeaderPage = new AdminHeaderPage(Browser.Page);
+    //ReportPage ReportPage = new ReportPage(Browser.Page);
 
     [TestInitialize]
     public override async Task Before()
@@ -32,7 +38,8 @@ public class ReportTests : BaseTest
         await AdminHeaderPage.GoToMenu(Helpers.Model.MenuItems.Report);
 
         var bookingName = $"{_bookingInput.firstname} {_bookingInput.lastname}";
-        ReportPage.IsBookingDisplayed(bookingName, _createRoomOutput.roomName).Result.Should().BeTrue();
+        var displayed = await ReportPage.IsBookingDisplayed(bookingName, _createRoomOutput.roomName);
+        displayed.Should().BeTrue();
     }
 
 
@@ -40,6 +47,6 @@ public class ReportTests : BaseTest
     public override async Task After()
     {
         await base.After();
-        var t = await RequestContext.Result.DeleteAsync($"{ApiResource.Room}{_createRoomOutput.roomid}");
+        await RequestContext.Result.DeleteAsync($"{ApiResource.Room}{_createRoomOutput.roomid}");
     }
 }

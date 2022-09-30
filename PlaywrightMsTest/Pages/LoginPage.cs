@@ -19,7 +19,10 @@ public class LoginPage
     {
         await UsernameInput.FillAsync(Constants.Username);
         await PasswordInput.FillAsync(Constants.Password);
-        await LoginButton.ClickAsync();
+        await _page.RunAndWaitForResponseAsync(async () =>
+       {
+           await LoginButton.ClickAsync();
+       }, x => x.Status == 200);
     }
 
 }

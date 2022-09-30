@@ -18,8 +18,10 @@ public class AdminHeaderPage
         {
             var text = await MenuItems.Nth(i).TextContentAsync();
             if (text == menuItem.ToString())
-                await MenuItems.Nth(i).ClickAsync();
-            //     break;
+                await _page.RunAndWaitForResponseAsync(async () =>
+                {
+                    await MenuItems.Nth(i).ClickAsync();
+                }, x => x.Status == 200);
         }
     }
 }

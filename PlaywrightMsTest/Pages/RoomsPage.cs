@@ -10,7 +10,8 @@ public class RoomsPage
 
     #region Selectors
 
-    private ILocator CreateButton => _page.Locator("#createRoom");
+    //  private ILocator CreateButton => _page.Locator("#createRoom");
+    private const string CreateButton = "#createRoom";
     private ILocator RoomNumberInput => _page.Locator("#roomName");
     private ILocator TypeDropDown => _page.Locator("#type");
     private ILocator AccessibleDropDown => _page.Locator("#accessible");
@@ -28,7 +29,8 @@ public class RoomsPage
     {
         await _page.RunAndWaitForResponseAsync(async () =>
         {
-            await CreateButton.ClickAsync();
+          //  await _page.WaitForSelectorAsync(CreateButton);
+            await _page.Locator(CreateButton).ClickAsync();
         }, x => x.Status == 200);
     }
 

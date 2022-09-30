@@ -1,5 +1,4 @@
 ﻿using Microsoft.Playwright;
-using PlaywrightMsTest.Helpers;
 
 namespace PlaywrightMsTest.Pages;
 
@@ -11,9 +10,7 @@ public class ReportPage
 
     public async Task<bool> IsBookingDisplayed(string name, int roomName)
     {
-        //  PageHelpers.ScrollDownToView(1000);
-        var t = _page.Locator("title", new PageLocatorOptions { HasTextString = $"{name} - Room: {roomName}" }).First;
-        return await _page.Locator("title", new PageLocatorOptions { HasTextString = $"{name} - Room: {roomName}" }).First
-            .IsVisibleAsync();
+        await _page.WaitForSelectorAsync($"[title='{name} - Room: {roomName}']");
+        return await _page.Locator($"[title='{name} - Room: {roomName}']").Last.IsVisibleAsync();
     }
 }
