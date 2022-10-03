@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model.ApiModels;
-using PlaywrightMsTest.Pages;
 
 namespace PlaywrightMsTest.Tests.Admin;
 

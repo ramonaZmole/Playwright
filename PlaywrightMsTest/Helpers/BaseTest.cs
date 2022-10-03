@@ -12,6 +12,7 @@ public class BaseTest
     public RoomsPage RoomsPage;
     public AdminHeaderPage AdminHeaderPage;
     public ReportPage ReportPage;
+    public HomePage HomePage;
 
     public Browser Browser = new();
 
@@ -37,6 +38,7 @@ public class BaseTest
         RoomsPage = new RoomsPage(Browser.Page);
         AdminHeaderPage = new AdminHeaderPage(Browser.Page);
         ReportPage = new ReportPage(Browser.Page);
+        HomePage = new HomePage(Browser.Page);
     }
 
     private async Task<string> GetLoginToken()
