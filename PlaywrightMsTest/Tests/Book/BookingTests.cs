@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Playwright;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
 using PlaywrightMsTest.Helpers.Model.ApiModels;
@@ -19,23 +20,24 @@ public class BookingTests : BaseTest
     }
 
     [TestMethod]
-    public async Task WhenBookingRoomSuccessMessageShouldBeDisplayedTest()
+    public async Task WhenBookingRoom_SuccessMessageShouldBeDisplayedTest()
     {
         await Browser.GoTo(Constants.Url);
 
-        await HomePage.ClickBookThisRoom(_createRoomResponse.description);
-        await HomePage.CompleteBookingDetails(new UserModel());
-        await HomePage.ClickBookRoom();
-        HomePage.IsSuccessMessageDisplayed().Result.Should().BeTrue();
+        await HomePage.BookThisRoom(_createRoomResponse.description);
+        await HomePage.InsertBookingDetails(new User());
+        await HomePage.BookRoom();
+        var isBookingCreated = await HomePage.IsSuccessMessageDisplayed();
+        isBookingCreated.Should().BeTrue();
     }
 
     [TestMethod]
-    public async Task WhenCancellingBookingFormShouldNotBeDisplayedTest()
+    public async Task WhenCancellingBooking_FormShouldNotBeDisplayedTest()
     {
         await Browser.GoTo(Constants.Url);
 
-        await HomePage.ClickBookThisRoom(_createRoomResponse.description);
-        await HomePage.CompleteBookingDetails(new UserModel());
+        await HomePage.BookThisRoom(_createRoomResponse.description);
+        await HomePage.InsertBookingDetails(new User());
         await HomePage.CancelBooking();
         HomePage.IsBookingFormDisplayed().Result.Should().BeFalse();
         HomePage.IsCalendarDisplayed().Result.Should().BeFalse();

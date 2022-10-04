@@ -31,7 +31,6 @@ public class RoomsPage
         {
             await _page.WaitForSelectorAsync(CreateButton);
             await _page.Locator(CreateButton).ClickAsync();
-            // await CreateButton.ClickAsync();
         }, x => x.Status is 200 or 400);
     }
 

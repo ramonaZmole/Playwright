@@ -22,7 +22,7 @@ public class HomePage
     private ILocator CancelBookingButton => _page.Locator(".btn-outline-danger");
     private ILocator Calendar => _page.Locator(".rbc-calendar");
 
-    private ILocator SuccessMessage => _page.Locator(".col-sm-6.text-center > h3");
+    private string SuccessMessage = "text=Booking Successful!";
     private ILocator BookRoomButtons => _page.Locator(".openBooking");
 
     // private ILocator ErrorMessages => _page.Locator(".alert.alert-danger p");
@@ -32,37 +32,32 @@ public class HomePage
     public HomePage(IPage page) => _page = page;
 
 
-    public async Task ClickBookRoom()
+    public async Task BookRoom()
     {
         await _page.RunAndWaitForResponseAsync(async () =>
         {
             await _page.WaitForSelectorAsync(BookRoomButton1);
             await _page.Locator(BookRoomButton1).ClickAsync();
-            // await CreateButton.ClickAsync();
-        }, x => x.Status is 200 or 400);
-        //  await BookRoomButton.ClickAsync();
+        }, x => x.Status is 200 or 400 or 201);
     }
 
     public async Task CancelBooking() => await CancelBookingButton.ClickAsync();
 
-    internal async Task CompleteBookingDetails(UserModel userModel)
+    internal async Task InsertBookingDetails(User user)
     {
-        await FirstNameInput.FillAsync(userModel.FirstName);
-        await LastNameInput.FillAsync(userModel.LastName);
-        await EmailInput.FillAsync(userModel.Email);
-        await PhoneInput.FillAsync(userModel.ContactPhone);
+        await FirstNameInput.FillAsync(user.FirstName);
+        await LastNameInput.FillAsync(user.LastName);
+        await EmailInput.FillAsync(user.Email);
+        await PhoneInput.FillAsync(user.ContactPhone);
 
-        SelectDates();
+        await SelectDates();
     }
 
-    public async Task ClickBookThisRoom(string roomDescription)
+    public async Task BookThisRoom(string roomDescription)
     {
         var descriptions = await GetElements(Descriptions);
-        var tt = descriptions.First(x => x.TextContentAsync().Result == roomDescription);
-
         var index = descriptions.IndexOf(descriptions.First(x => x.TextContentAsync().Result == roomDescription));
         var t = _page.Locator($":nth-match(:text('Book this room'), {index + 1})");
-        //  var ttl = t[index];
         await t.ClickAsync();
     }
 
@@ -87,30 +82,32 @@ public class HomePage
         //    .Release(Browser.WebDriver.FindElement(By.XPath($"//*[text()={Constants.BookingEndDay}] ")))
         //    .Build()
         //    .Perform();
-        var end = _page.Locator(".rbc-date-cell button",
-            new PageLocatorOptions { HasTextString = Constants.BookingEndDay });
+        //var end = _page.Locator(".rbc-date-cell button",
+        //    new PageLocatorOptions { HasTextString = Constants.BookingEndDay });
         //var t = _page.Locator(".rbc-date-cell button",
         //    new PageLocatorOptions { HasTextString = Constants.BookingStartDay }).;
 
 
-        await _page.Mouse.ClickAsync(2, 2);
+        //   await _page.Mouse.ClickAsync(2, 2);
 
         var tsel = _page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = Constants.BookingStartDay });
-        //  await tsel.HoverAsync();
         await tsel.ClickAsync();
+        //    await _page.Mouse.MoveAsync(200, 100);
         await _page.Mouse.DownAsync();
-        await _page.Mouse.MoveAsync(10, 10);
+        await _page.Mouse.MoveAsync(100, 200);
         await _page.Mouse.UpAsync();
-        //await _page.DragAndDropAsync(".rbc-date-cell button ",
-        //    $"//*[text()={Constants.BookingEndDay}] ");
     }
 
     public async Task<bool> IsSuccessMessageDisplayed()
     {
-        //_successMessage;
-        var t = await SuccessMessage.TextContentAsync();
-        return t.Equals("Booking Successful!");
+        var selector = _page.Locator(SuccessMessage);
+
+        await _page.Locator(SuccessMessage).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 50 });
+
+        var t = await selector.IsVisibleAsync();
+        return t;
     }
+
 
     public async Task<bool> IsBookingFormDisplayed()
     {
@@ -127,14 +124,12 @@ public class HomePage
         return await Calendar.IsVisibleAsync();
     }
 
-
-
     public async Task<List<string?>> GetErrorMessages()
     {
+        await _page.Locator(ErrorMessages).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 100 });
+
         var errorMessages = _page.Locator(ErrorMessages);
-        //  WaitHelpers.ExplicitWait();
         var list = new List<string?>();
-        // var t = await GetElements(ErrorMessages);
 
         for (var i = 0; i < await errorMessages.CountAsync(); i++)
         {

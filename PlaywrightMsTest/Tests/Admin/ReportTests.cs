@@ -10,11 +10,6 @@ public class ReportTests : BaseTest
     private CreateRoomOutput _createRoomOutput;
     private CreateBookingInput _bookingInput;
 
-    //LoginPage LoginPage = new LoginPage(Browser.Page);
-    //RoomsPage RoomsPage = new RoomsPage(Browser.Page);
-    //AdminHeaderPage AdminHeaderPage = new AdminHeaderPage(Browser.Page);
-    //ReportPage ReportPage = new ReportPage(Browser.Page);
-
     [TestInitialize]
     public override async Task Before()
     {

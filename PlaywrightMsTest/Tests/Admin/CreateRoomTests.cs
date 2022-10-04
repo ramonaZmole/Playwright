@@ -11,7 +11,6 @@ public class CreateRoomTests : BaseTest
 {
     private readonly CreateRoomModel _roomModel = new();
 
-
     [TestMethod]
     public async Task WhenCreatingARoom_RoomShouldBeSavedTes()
     {

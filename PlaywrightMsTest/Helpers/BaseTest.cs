@@ -18,6 +18,7 @@ public class BaseTest
 
     public Task<IAPIRequestContext> RequestContext = ApiHelpers.GetRequestContext();
 
+    private TestContext TestContext { get; set; }
 
     [TestInitialize]
     public virtual async Task Before()
@@ -30,7 +31,18 @@ public class BaseTest
     }
 
     [TestCleanup]
-    public virtual async Task After() => await Browser.Dispose();
+    public virtual async Task After()
+    {
+        if (TestContext.CurrentTestOutcome.Equals(UnitTestOutcome.Failed))
+        {
+            var screenshotsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Screenshots");
+
+            var screenshotsPath = Path.Combine(screenshotsFolder, $"{TestContext.TestName}_{DateTime.Now:yyyyMMddHHmm}.png");
+            await Browser.Page.ScreenshotAsync(new PageScreenshotOptions { Path = screenshotsPath, FullPage = true });
+            TestContext.AddResultFile(screenshotsPath);
+        }
+        await Browser.Dispose();
+    }
 
     private void InitializePages()
     {

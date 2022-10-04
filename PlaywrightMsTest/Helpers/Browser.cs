@@ -19,7 +19,6 @@ public class Browser
         _browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = false,
-            //      SlowMo = 1000
         });
         return await _browser.NewPageAsync();
     }
