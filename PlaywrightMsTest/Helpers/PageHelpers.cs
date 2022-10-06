@@ -40,12 +40,12 @@ namespace PlaywrightMsTest.Helpers
             return list;
         }
 
-        public static async Task WaitForLocator(this ILocator locator)
+        public static async Task WaitForLocator(this ILocator locator, WaitForSelectorState state = WaitForSelectorState.Attached)
         {
             await locator.Last.WaitForAsync(new LocatorWaitForOptions
             {
-                Timeout = 100,
-                State = WaitForSelectorState.Attached
+                Timeout = 200,
+                State = state
             });
         }
     }

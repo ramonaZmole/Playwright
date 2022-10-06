@@ -24,7 +24,7 @@ public class ReportTests : BaseTest
     }
 
     [TestMethod]
-    public async Task WhenBookingARoom_DatePeriodShouldBeDisplayedTest()
+    public async Task WhenViewingReports_BookedRoomsShouldBeDisplayedTest()
     {
         await Browser.GoTo(Constants.AdminUrl);
 

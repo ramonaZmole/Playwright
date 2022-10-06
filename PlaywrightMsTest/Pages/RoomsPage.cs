@@ -34,6 +34,7 @@ public class RoomsPage
         }, x => x.Status is 200 or 400);
         await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
         await _page.WaitForLoadStateAsync(LoadState.Load);
+        await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
     }
 
     public async Task FillForm(Room createRoomModel)
@@ -49,7 +50,7 @@ public class RoomsPage
 
     public async Task<Room> GetLastCreatedRoomDetails()
     {
-        await LastRoomDetails.WaitForLocator();
+        await LastRoomDetails.WaitForLocator(WaitForSelectorState.Visible);
 
         var lastRoomDetails = LastRoomDetails.Last.Locator("p");
         var roomDetails = await lastRoomDetails.GetLocatorsText();

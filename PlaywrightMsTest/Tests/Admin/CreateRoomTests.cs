@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using PlaywrightMsTest.Helpers;
-using PlaywrightMsTest.Helpers.Model;
 using PlaywrightMsTest.Helpers.Model.ApiModels;
 
 namespace PlaywrightMsTest.Tests.Admin;
