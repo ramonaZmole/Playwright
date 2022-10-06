@@ -18,7 +18,8 @@ public class CreateRoomTests : BaseTest
         await LoginPage.Login();
 
         await RoomsPage.CreateRoom();
-        RoomsPage.IsErrorMessageDisplayed().Result.Should().BeTrue();
+        var isErrorDisplayed = await RoomsPage.IsErrorMessageDisplayed();
+        isErrorDisplayed.Should().BeTrue();
 
         await RoomsPage.FillForm(_roomModel);
         await RoomsPage.CreateRoom();

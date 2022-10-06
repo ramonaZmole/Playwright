@@ -37,9 +37,8 @@ public class BookingFormTests : BaseTest
         await HomePage.InsertBookingDetails(new User());
         await HomePage.BookRoom();
         var alreadyBookedMessage = await HomePage.GetErrorMessages();
-        alreadyBookedMessage.Should().BeEquivalentTo(Constants.FormErrorMessages);
-
-       // HomePage.GetErrorMessages().Result[0].Should().Be(Constants.AlreadyBookedErrorMessage);
+        alreadyBookedMessage.Should().BeEquivalentTo(Constants.AlreadyBookedErrorMessage);
+        // HomePage.GetErrorMessages().Result[0].Should().Be(Constants.AlreadyBookedErrorMessage);
     }
 
     [TestCleanup]

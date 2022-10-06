@@ -10,15 +10,14 @@ public class RoomsPage
 
     #region Selectors
 
-    //  private ILocator CreateButton => _page.Locator("#createRoom");
     private const string CreateButton = "#createRoom";
     private ILocator RoomNumberInput => _page.Locator("#roomName");
     private ILocator TypeDropDown => _page.Locator("#type");
     private ILocator AccessibleDropDown => _page.Locator("#accessible");
     private ILocator RoomPriceInput => _page.Locator("#roomPrice");
-    private ILocator ErrorMessage => _page.Locator(".alert ");
+    private const string ErrorMessage = ".alert";
 
-    private const string LastRoomDetails = "#root > div:nth-child(2) div:nth-last-child(2) .row.detail div p";
+    private const string LastRoomDetails = ".container .row.detail";
 
     #endregion
 
@@ -28,10 +27,10 @@ public class RoomsPage
     public async Task CreateRoom()
     {
         await _page.RunAndWaitForResponseAsync(async () =>
-        {
-            await _page.WaitForSelectorAsync(CreateButton);
-            await _page.Locator(CreateButton).ClickAsync();
-        }, x => x.Status is 200 or 400);
+          {
+              await _page.WaitForSelectorAsync(CreateButton);
+              await _page.Locator(CreateButton).ClickAsync();
+          }, x => x.Status is 200 or 400);
     }
 
     public async Task FillForm(CreateRoomModel createRoomModel)
@@ -47,8 +46,13 @@ public class RoomsPage
 
     public async Task<CreateRoomModel> GetLastCreatedRoomDetails()
     {
-        await _page.WaitForSelectorAsync(LastRoomDetails);
-        var lastRoomDetails = _page.Locator(LastRoomDetails);
+        //await _page.WaitForSelectorAsync(LastRoomDetails);
+
+
+        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await _page.Locator(LastRoomDetails).Last.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
+
+        var lastRoomDetails = _page.Locator(LastRoomDetails).Last.Locator("p");
 
         var roomDetails = new List<string?>();
 
@@ -69,9 +73,13 @@ public class RoomsPage
 
     public async Task<bool> IsErrorMessageDisplayed()
     {
-        var errorMessage = await ErrorMessage.TextContentAsync();
+        await _page.WaitForSelectorAsync(ErrorMessage);
+        // await _page.Locator(ErrorMessage).First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
 
-        return await ErrorMessage.IsVisibleAsync() &&
+        var locator = _page.Locator(ErrorMessage);
+        var errorMessage = await _page.Locator(ErrorMessage).TextContentAsync();
+
+        return await locator.IsVisibleAsync() &&
                errorMessage.Contains("must be greater than or equal to 1")
                && errorMessage.Contains("Room name must be set");
     }

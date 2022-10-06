@@ -18,7 +18,7 @@ public class BaseTest
 
     public Task<IAPIRequestContext> RequestContext = ApiHelpers.GetRequestContext();
 
-    private TestContext TestContext { get; set; }
+    public TestContext TestContext { get; set; }
 
     [TestInitialize]
     public virtual async Task Before()

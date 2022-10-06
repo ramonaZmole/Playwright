@@ -38,7 +38,7 @@ public class HomePage
         {
             await _page.WaitForSelectorAsync(BookRoomButton1);
             await _page.Locator(BookRoomButton1).ClickAsync();
-        }, x => x.Status is 200 or 400 or 201);
+        }, x => x.Status is 200 or 400 or 201 or 409);
     }
 
     public async Task CancelBooking() => await CancelBookingButton.ClickAsync();
@@ -90,7 +90,7 @@ public class HomePage
 
         //   await _page.Mouse.ClickAsync(2, 2);
 
-        var tsel = _page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = Constants.BookingStartDay });
+        var tsel = _page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = "17" }).First;
         await tsel.ClickAsync();
         //    await _page.Mouse.MoveAsync(200, 100);
         await _page.Mouse.DownAsync();
@@ -100,12 +100,10 @@ public class HomePage
 
     public async Task<bool> IsSuccessMessageDisplayed()
     {
+        await _page.Locator(SuccessMessage).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = 100 });
+
         var selector = _page.Locator(SuccessMessage);
-
-        await _page.Locator(SuccessMessage).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 50 });
-
-        var t = await selector.IsVisibleAsync();
-        return t;
+        return await selector.IsVisibleAsync();
     }
 
 
@@ -126,9 +124,10 @@ public class HomePage
 
     public async Task<List<string?>> GetErrorMessages()
     {
-        await _page.Locator(ErrorMessages).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Visible, Timeout = 100 });
-
+        await _page.WaitForSelectorAsync(ErrorMessages);
+        await _page.Locator(ErrorMessages).First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
         var errorMessages = _page.Locator(ErrorMessages);
+
         var list = new List<string?>();
 
         for (var i = 0; i < await errorMessages.CountAsync(); i++)

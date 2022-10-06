@@ -8,8 +8,8 @@ public class Constants
     public static string Username = "admin";
     public static string Password = "password";
 
-    public static string BookingStartDay = "10";
-    public static string BookingEndDay = "13";
+    public static string BookingStartDay = "03";
+    public static string BookingEndDay = "07";
 
     public static string AlreadyBookedErrorMessage = "The room dates are either invalid or are already booked for one or more of the dates that you have selected.";
     public static List<string> FormErrorMessages = new()
