@@ -11,6 +11,7 @@ public class HomePage
     #region Selectors
 
     private ILocator Descriptions => _page.Locator(".row.hotel-room-info p");
+    private ILocator BookThisRoomButtons => _page.Locator(".row.hotel-room-info button");
 
     private ILocator FirstNameInput => _page.Locator(".room-firstname");
     private ILocator LastNameInput => _page.Locator(".room-lastname");
@@ -32,8 +33,7 @@ public class HomePage
     {
         await _page.RunAndWaitForResponseAsync(async () =>
         {
-            await BookRoomButton.WaitForAsync();
-            await BookRoomButton.ClickAsync();
+            await BookRoomButton.Click();
         }, x => x.Status is 200 or 400 or 201 or 409);
     }
 
@@ -49,61 +49,26 @@ public class HomePage
         await SelectDates();
     }
 
-    public async Task BookThisRoom(string roomDescription)
-    {
-        var descriptions = await GetElements(Descriptions);
-        var index = descriptions.IndexOf(descriptions.First(x => x.TextContentAsync().Result == roomDescription));
-        var t = _page.Locator($":nth-match(:text('Book this room'), {index + 1})");
-        await t.ClickAsync();
-    }
-
-
-    private async Task<List<ILocator>> GetElements(ILocator locator)
-    {
-        var elements = new List<ILocator>();
-        for (var i = 0; i < await locator.CountAsync(); i++)
-        {
-            elements.Add(Descriptions.Nth(i));
-        }
-
-        return elements;
-    }
-
     private async Task SelectDates()
     {
-        //var actions = new Actions(Browser.WebDriver);
-
-        //actions.ClickAndHold(Browser.WebDriver.FindElement(By.XPath($"//*[text()={Constants.BookingStartDay}] ")))
-        //    .MoveByOffset(10, 10)
-        //    .Release(Browser.WebDriver.FindElement(By.XPath($"//*[text()={Constants.BookingEndDay}] ")))
-        //    .Build()
-        //    .Perform();
-        //var end = _page.Locator(".rbc-date-cell button",
-        //    new PageLocatorOptions { HasTextString = Constants.BookingEndDay });
-        //var t = _page.Locator(".rbc-date-cell button",
-        //    new PageLocatorOptions { HasTextString = Constants.BookingStartDay }).;
-
-
-        //   await _page.Mouse.ClickAsync(2, 2);
-
-        var tsel = _page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = "17" }).First;
-        await tsel.ClickAsync();
-        //    await _page.Mouse.MoveAsync(200, 100);
+        var date = _page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = "17" }).First;
+        await date.ClickAsync();
         await _page.Mouse.DownAsync();
         await _page.Mouse.MoveAsync(100, 200);
         await _page.Mouse.UpAsync();
     }
 
-    public async Task<bool> IsSuccessMessageDisplayed()
+    public async Task BookThisRoom(string roomDescription)
     {
-        await SuccessMessage.WaitForAsync(new LocatorWaitForOptions
-        {
-            Timeout = 100,
-            State = WaitForSelectorState.Attached
-        });
-        return await SuccessMessage.IsVisibleAsync();
+        var descriptions = await Descriptions.GetElements();
+        var bookButtons = await BookThisRoomButtons.GetElements();
+
+        var index = descriptions.IndexOf(descriptions.First(x => x.TextContentAsync().Result == roomDescription));
+        await bookButtons[index].ClickAsync();
+        // await _page.Locator($":nth-match(:text('Book this room'), {index + 1})").ClickAsync();
     }
 
+    public async Task<bool> IsSuccessMessageDisplayed() => await SuccessMessage.IsVisible();
 
     public async Task<bool> IsBookingFormDisplayed()
     {
@@ -115,25 +80,8 @@ public class HomePage
                && await CancelBookingButton.IsVisibleAsync();
     }
 
-    public async Task<bool> IsCalendarDisplayed()
-    {
-        return await Calendar.IsVisibleAsync();
-    }
+    public async Task<bool> IsCalendarDisplayed() => await Calendar.IsVisibleAsync();
 
-    public async Task<List<string?>> GetErrorMessages()
-    {
-        await ErrorMessages.First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100,State = WaitForSelectorState.Visible});
-        // await _page.WaitForSelectorAsync(ErrorMessages);
-        // await _page.Locator(ErrorMessages).First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
-        //       var errorMessages = _page.Locator(ErrorMessages);
+    public async Task<List<string?>> GetErrorMessages() => await ErrorMessages.GetLocatorsText();
 
-        var list = new List<string?>();
-
-        for (var i = 0; i < await ErrorMessages.CountAsync(); i++)
-        {
-            list.Add(await ErrorMessages.Nth(i).TextContentAsync());
-        }
-
-        return list;
-    }
 }

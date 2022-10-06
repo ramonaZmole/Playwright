@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.Playwright;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
 using PlaywrightMsTest.Helpers.Model.ApiModels;

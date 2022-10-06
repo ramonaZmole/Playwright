@@ -9,7 +9,7 @@ namespace PlaywrightMsTest.Tests.Admin;
 [TestClass]
 public class CreateRoomTests : BaseTest
 {
-    private readonly CreateRoomModel _roomModel = new();
+    private readonly Helpers.Model.Room _roomModel = new();
 
     [TestMethod]
     public async Task WhenCreatingARoom_RoomShouldBeSavedTes()

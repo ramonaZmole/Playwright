@@ -1,6 +1,6 @@
 ﻿namespace PlaywrightMsTest.Helpers.Model;
 
-public enum MenuItems
+public enum Menu
 {
     Rooms,
     Report,

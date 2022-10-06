@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
@@ -29,12 +30,13 @@ public class RoomsPage
     {
         await _page.RunAndWaitForResponseAsync(async () =>
         {
-            await CreateButton.WaitForAsync();
-            await CreateButton.ClickAsync();
+            await CreateButton.Click();
         }, x => x.Status is 200 or 400);
+        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await _page.WaitForLoadStateAsync(LoadState.Load);
     }
 
-    public async Task FillForm(CreateRoomModel createRoomModel)
+    public async Task FillForm(Room createRoomModel)
     {
         await RoomNumberInput.FillAsync(createRoomModel.RoomName);
         await TypeDropdown.SelectOptionAsync(createRoomModel.Type);
@@ -45,23 +47,14 @@ public class RoomsPage
         await _page.Locator(".form-check-label", new PageLocatorOptions { HasTextString = createRoomModel.RoomDetails }).ClickAsync();
     }
 
-    public async Task<CreateRoomModel> GetLastCreatedRoomDetails()
+    public async Task<Room> GetLastCreatedRoomDetails()
     {
-        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-        await _page.WaitForLoadStateAsync(LoadState.Load);
-
-        await LastRoomDetails.Last.WaitForAsync(new LocatorWaitForOptions { Timeout = 200, State = WaitForSelectorState.Visible });
+        await LastRoomDetails.WaitForLocator();
 
         var lastRoomDetails = LastRoomDetails.Last.Locator("p");
+        var roomDetails = await lastRoomDetails.GetLocatorsText();
 
-        var roomDetails = new List<string?>();
-
-        for (var i = 0; i < await lastRoomDetails.CountAsync(); i++)
-        {
-            roomDetails.Add(await lastRoomDetails.Nth(i).TextContentAsync());
-        }
-
-        return new CreateRoomModel
+        return new Room
         {
             RoomName = roomDetails[0] ?? string.Empty,
             Type = roomDetails[1] ?? string.Empty,
@@ -73,11 +66,11 @@ public class RoomsPage
 
     public async Task<bool> IsErrorMessageDisplayed()
     {
-        await ErrorMessage.WaitForAsync();
+        await ErrorMessage.WaitForLocator();
 
         var errorMessage = await ErrorMessage.TextContentAsync();
 
-        return await ErrorMessage.IsVisibleAsync() &&
+        return await ErrorMessage.IsVisible() &&
                errorMessage.Contains("must be greater than or equal to 1")
                && errorMessage.Contains("Room name must be set");
     }

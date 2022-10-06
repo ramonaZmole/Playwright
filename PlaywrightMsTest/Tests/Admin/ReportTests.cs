@@ -29,7 +29,7 @@ public class ReportTests : BaseTest
         await Browser.GoTo(Constants.AdminUrl);
 
         await LoginPage.Login();
-        await AdminHeaderPage.GoToMenu(Helpers.Model.MenuItems.Report);
+        await AdminHeaderPage.GoToMenu(Helpers.Model.Menu.Report);
 
         var bookingName = $"{_bookingInput.firstname} {_bookingInput.lastname}";
         var displayed = await ReportPage.IsBookingDisplayed(bookingName, _createRoomOutput.roomName);
