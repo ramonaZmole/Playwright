@@ -18,15 +18,11 @@ public class HomePage
     private ILocator PhoneInput => _page.Locator(".room-phone");
 
     private ILocator BookRoomButton => _page.Locator(".btn-outline-primary.book-room");
-    private string BookRoomButton1 = ".btn-outline-primary.book-room";
     private ILocator CancelBookingButton => _page.Locator(".btn-outline-danger");
     private ILocator Calendar => _page.Locator(".rbc-calendar");
+    private ILocator SuccessMessage => _page.Locator("text=Booking Successful!");
 
-    private string SuccessMessage = "text=Booking Successful!";
-    private ILocator BookRoomButtons => _page.Locator(".openBooking");
-
-    // private ILocator ErrorMessages => _page.Locator(".alert.alert-danger p");
-    private string ErrorMessages = ".alert.alert-danger p";
+    private ILocator ErrorMessages => _page.Locator(".alert.alert-danger p");
     #endregion
 
     public HomePage(IPage page) => _page = page;
@@ -36,8 +32,8 @@ public class HomePage
     {
         await _page.RunAndWaitForResponseAsync(async () =>
         {
-            await _page.WaitForSelectorAsync(BookRoomButton1);
-            await _page.Locator(BookRoomButton1).ClickAsync();
+            await BookRoomButton.WaitForAsync();
+            await BookRoomButton.ClickAsync();
         }, x => x.Status is 200 or 400 or 201 or 409);
     }
 
@@ -100,10 +96,12 @@ public class HomePage
 
     public async Task<bool> IsSuccessMessageDisplayed()
     {
-        await _page.Locator(SuccessMessage).WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = 100 });
-
-        var selector = _page.Locator(SuccessMessage);
-        return await selector.IsVisibleAsync();
+        await SuccessMessage.WaitForAsync(new LocatorWaitForOptions
+        {
+            Timeout = 100,
+            State = WaitForSelectorState.Attached
+        });
+        return await SuccessMessage.IsVisibleAsync();
     }
 
 
@@ -124,15 +122,16 @@ public class HomePage
 
     public async Task<List<string?>> GetErrorMessages()
     {
-        await _page.WaitForSelectorAsync(ErrorMessages);
-        await _page.Locator(ErrorMessages).First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
-        var errorMessages = _page.Locator(ErrorMessages);
+        await ErrorMessages.First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
+        // await _page.WaitForSelectorAsync(ErrorMessages);
+        // await _page.Locator(ErrorMessages).First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
+        //       var errorMessages = _page.Locator(ErrorMessages);
 
         var list = new List<string?>();
 
-        for (var i = 0; i < await errorMessages.CountAsync(); i++)
+        for (var i = 0; i < await ErrorMessages.CountAsync(); i++)
         {
-            list.Add(await errorMessages.Nth(i).TextContentAsync());
+            list.Add(await ErrorMessages.Nth(i).TextContentAsync());
         }
 
         return list;
