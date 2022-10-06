@@ -122,7 +122,7 @@ public class HomePage
 
     public async Task<List<string?>> GetErrorMessages()
     {
-        await ErrorMessages.First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
+        await ErrorMessages.First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100,State = WaitForSelectorState.Visible});
         // await _page.WaitForSelectorAsync(ErrorMessages);
         // await _page.Locator(ErrorMessages).First.WaitForAsync(new LocatorWaitForOptions { Timeout = 100 });
         //       var errorMessages = _page.Locator(ErrorMessages);
