@@ -28,13 +28,12 @@ public class ReportPage : CalendarPage
         return await _page.Locator($"[title='{name} - Room: {roomName}']").Last.IsVisibleAsync();
     }
 
-    public async Task BookRoom(User user, Room room)
+    public async Task InsertBookingDetails(User user, Room room)
     {
         await FirstNameInput.FillAsync(user.FirstName);
         await LastNameInput.FillAsync(user.LastName);
         await RoomDropdown.SelectOptionAsync(new SelectOptionValue { Label = room.RoomName });
         await DepositPaidDropdown.SelectOptionAsync("false");
-        await BookButton.ClickAsync();
     }
 
     public async Task Book() => await BookButton.ClickAsync();

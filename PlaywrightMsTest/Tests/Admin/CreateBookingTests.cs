@@ -34,7 +34,8 @@ namespace PlaywrightMsTest.Tests.Admin
             var isErrorMessageDisplayed = await ReportPage.IsErrorMessageDisplayed();
             isErrorMessageDisplayed.Should().BeTrue();
 
-            await ReportPage.BookRoom(_user, _room);
+            await ReportPage.InsertBookingDetails(_user, _room);
+            await ReportPage.Book();
 
             var bookingName = $"{_user.FirstName} {_user.LastName}";
             var displayed = await ReportPage.IsBookingDisplayed(bookingName, _createRoomOutput.roomName);
