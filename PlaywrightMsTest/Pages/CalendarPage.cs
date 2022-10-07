@@ -2,14 +2,14 @@
 
 namespace PlaywrightMsTest.Pages
 {
-    public class CalendarPage
+    public class CalendarPage : BasePage
     {
         private readonly IPage _page;
 
-        public CalendarPage(IPage page) => _page = page;
+        public CalendarPage(IPage page) : base(page) => _page = page;
 
 
-        protected async Task SelectDates()
+        public async Task SelectDates()
         {
             var date = _page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = "17" }).First;
             await date.ClickAsync();

@@ -3,7 +3,7 @@ using PlaywrightMsTest.Helpers.Model.ApiModels;
 using PlaywrightMsTest.Pages;
 
 
-//[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 namespace PlaywrightMsTest.Helpers;
 
 public class BaseTest

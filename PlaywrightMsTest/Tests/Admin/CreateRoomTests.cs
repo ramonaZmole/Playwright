@@ -20,6 +20,10 @@ public class CreateRoomTests : BaseTest
         var isErrorDisplayed = await RoomsPage.IsErrorMessageDisplayed();
         isErrorDisplayed.Should().BeTrue();
 
+        var errorMessages = await RoomsPage.GetErrorMessages();
+        errorMessages.Should().Contain("must be greater than or equal to 1");
+        errorMessages.Should().Contain("Room name must be set");
+
         await RoomsPage.FillForm(_roomModel);
         await RoomsPage.CreateRoom();
         var roomDetails = await RoomsPage.GetLastCreatedRoomDetails();

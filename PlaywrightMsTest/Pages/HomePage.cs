@@ -23,7 +23,6 @@ public class HomePage : CalendarPage
     private ILocator Calendar => _page.Locator(".rbc-calendar");
     private ILocator SuccessMessage => _page.Locator("text=Booking Successful!");
 
-    private ILocator ErrorMessages => _page.Locator(".alert.alert-danger p");
     #endregion
 
     public HomePage(IPage page) : base(page) => _page = page;
@@ -74,7 +73,5 @@ public class HomePage : CalendarPage
     }
 
     public async Task<bool> IsCalendarDisplayed() => await Calendar.IsVisibleAsync();
-
-    public async Task<List<string?>> GetErrorMessages() => await ErrorMessages.GetLocatorsText();
 
 }

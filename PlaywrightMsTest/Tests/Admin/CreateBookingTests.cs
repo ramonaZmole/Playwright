@@ -28,6 +28,12 @@ namespace PlaywrightMsTest.Tests.Admin
 
             await LoginPage.Login();
             await AdminHeaderPage.GoToMenu(Menu.Report);
+            await ReportPage.SelectDates();
+            await ReportPage.Book();
+
+            var isErrorMessageDisplayed = await ReportPage.IsErrorMessageDisplayed();
+            isErrorMessageDisplayed.Should().BeTrue();
+
             await ReportPage.BookRoom(_user, _room);
 
             var bookingName = $"{_user.FirstName} {_user.LastName}";

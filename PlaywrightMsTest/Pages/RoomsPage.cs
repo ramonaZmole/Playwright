@@ -4,7 +4,7 @@ using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
 
-public class RoomsPage
+public class RoomsPage : BasePage
 {
 
     private readonly IPage _page;
@@ -16,14 +16,11 @@ public class RoomsPage
     private ILocator TypeDropdown => _page.Locator("#type");
     private ILocator AccessibleDropdown => _page.Locator("#accessible");
     private ILocator RoomPriceInput => _page.Locator("#roomPrice");
-
-    private ILocator ErrorMessage => _page.Locator(".alert");
-
     private ILocator LastRoomDetails => _page.Locator(".container .row.detail");
 
     #endregion
 
-    public RoomsPage(IPage page) => _page = page;
+    public RoomsPage(IPage page) : base(page) => _page = page;
 
 
     public async Task CreateRoom()
@@ -51,6 +48,7 @@ public class RoomsPage
     public async Task<Room> GetLastCreatedRoomDetails()
     {
         await LastRoomDetails.WaitForLocator(WaitForSelectorState.Visible);
+        await LastRoomDetails.First.WaitForAsync();
 
         var lastRoomDetails = LastRoomDetails.Last.Locator("p");
         var roomDetails = await lastRoomDetails.GetLocatorsText();
@@ -63,16 +61,5 @@ public class RoomsPage
             Price = roomDetails[3] ?? string.Empty,
             RoomDetails = roomDetails[4] ?? string.Empty
         };
-    }
-
-    public async Task<bool> IsErrorMessageDisplayed()
-    {
-        await ErrorMessage.WaitForLocator();
-
-        var errorMessage = await ErrorMessage.TextContentAsync();
-
-        return await ErrorMessage.IsVisible() &&
-               errorMessage.Contains("must be greater than or equal to 1")
-               && errorMessage.Contains("Room name must be set");
     }
 }

@@ -30,12 +30,12 @@ public class ReportPage : CalendarPage
 
     public async Task BookRoom(User user, Room room)
     {
-        await SelectDates();
-
         await FirstNameInput.FillAsync(user.FirstName);
         await LastNameInput.FillAsync(user.LastName);
         await RoomDropdown.SelectOptionAsync(new SelectOptionValue { Label = room.RoomName });
         await DepositPaidDropdown.SelectOptionAsync("false");
         await BookButton.ClickAsync();
     }
+
+    public async Task Book() => await BookButton.ClickAsync();
 }
