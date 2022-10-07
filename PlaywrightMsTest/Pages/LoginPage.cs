@@ -3,23 +3,18 @@ using PlaywrightMsTest.Helpers;
 
 namespace PlaywrightMsTest.Pages;
 
-public class LoginPage
+public class LoginPage : BasePage
 {
-    private readonly IPage _page;
-
-    private ILocator UsernameInput => _page.Locator("#username");
-    private ILocator PasswordInput => _page.Locator("#password");
-    private ILocator LoginButton => _page.Locator("#doLogin");
-
-
-    public LoginPage(IPage page) => _page = page;
+    private static ILocator UsernameInput => Page.Locator("#username");
+    private static ILocator PasswordInput => Page.Locator("#password");
+    private static ILocator LoginButton => Page.Locator("#doLogin");
 
 
     public async Task Login()
     {
         await UsernameInput.FillAsync(Constants.Username);
         await PasswordInput.FillAsync(Constants.Password);
-        await _page.RunAndWaitForResponseAsync(async () =>
+        await Page.RunAndWaitForResponseAsync(async () =>
        {
            await LoginButton.ClickAsync();
        }, x => x.Status == 200);

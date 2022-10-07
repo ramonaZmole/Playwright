@@ -6,31 +6,27 @@ namespace PlaywrightMsTest.Pages;
 
 public class HomePage : CalendarPage
 {
-    private readonly IPage _page;
-
     #region Selectors
 
-    private ILocator Descriptions => _page.Locator(".row.hotel-room-info p");
-    private ILocator BookThisRoomButtons => _page.Locator(".row.hotel-room-info button");
+    private ILocator Descriptions => Page.Locator(".row.hotel-room-info p");
+    private ILocator BookThisRoomButtons => Page.Locator(".row.hotel-room-info button");
 
-    private ILocator FirstNameInput => _page.Locator(".room-firstname");
-    private ILocator LastNameInput => _page.Locator(".room-lastname");
-    private ILocator EmailInput => _page.Locator(".room-email");
-    private ILocator PhoneInput => _page.Locator(".room-phone");
+    private ILocator FirstNameInput => Page.Locator(".room-firstname");
+    private ILocator LastNameInput => Page.Locator(".room-lastname");
+    private ILocator EmailInput => Page.Locator(".room-email");
+    private ILocator PhoneInput => Page.Locator(".room-phone");
 
-    private ILocator BookRoomButton => _page.Locator(".btn-outline-primary.book-room");
-    private ILocator CancelBookingButton => _page.Locator(".btn-outline-danger");
-    private ILocator Calendar => _page.Locator(".rbc-calendar");
-    private ILocator SuccessMessage => _page.Locator("text=Booking Successful!");
+    private ILocator BookRoomButton => Page.Locator(".btn-outline-primary.book-room");
+    private ILocator CancelBookingButton => Page.Locator(".btn-outline-danger");
+    private ILocator Calendar => Page.Locator(".rbc-calendar");
+    private ILocator SuccessMessage => Page.Locator("text=Booking Successful!");
 
     #endregion
-
-    public HomePage(IPage page) : base(page) => _page = page;
 
 
     public async Task BookRoom()
     {
-        await _page.RunAndWaitForResponseAsync(async () =>
+        await Page.RunAndWaitForResponseAsync(async () =>
         {
             await BookRoomButton.Click();
         }, x => x.Status is 200 or 400 or 201 or 409);

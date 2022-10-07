@@ -2,6 +2,7 @@
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
 using PlaywrightMsTest.Helpers.Model.ApiModels;
+using PlaywrightMsTest.Pages;
 
 namespace PlaywrightMsTest.Tests.Book;
 
@@ -9,6 +10,8 @@ namespace PlaywrightMsTest.Tests.Book;
 public class BookingFormTests : BaseTest
 {
     private CreateRoomOutput _createRoomOutput;
+
+    private readonly HomePage HomePage = new();
 
     [TestInitialize]
     public override async Task Before()
@@ -27,7 +30,7 @@ public class BookingFormTests : BaseTest
     [TestMethod]
     public async Task WhenBookingRoom_ErrorMessageShouldBeDisplayedTest()
     {
-        await Browser.GoTo(Constants.Url);
+        await GoToAsync(Constants.Url);
 
         await HomePage.BookThisRoom(_createRoomOutput.description);
         await HomePage.BookRoom();

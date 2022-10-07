@@ -7,31 +7,26 @@ namespace PlaywrightMsTest.Pages;
 public class RoomsPage : BasePage
 {
 
-    private readonly IPage _page;
-
     #region Selectors
 
-    private ILocator CreateButton => _page.Locator("#createRoom");
-    private ILocator RoomNumberInput => _page.Locator("#roomName");
-    private ILocator TypeDropdown => _page.Locator("#type");
-    private ILocator AccessibleDropdown => _page.Locator("#accessible");
-    private ILocator RoomPriceInput => _page.Locator("#roomPrice");
-    private ILocator LastRoomDetails => _page.Locator(".container .row.detail");
+    private ILocator CreateButton => Page.Locator("#createRoom");
+    private ILocator RoomNumberInput => Page.Locator("#roomName");
+    private ILocator TypeDropdown => Page.Locator("#type");
+    private ILocator AccessibleDropdown => Page.Locator("#accessible");
+    private ILocator RoomPriceInput => Page.Locator("#roomPrice");
+    private ILocator LastRoomDetails => Page.Locator(".container .row.detail");
 
     #endregion
 
-    public RoomsPage(IPage page) : base(page) => _page = page;
-
-
     public async Task CreateRoom()
     {
-        await _page.RunAndWaitForResponseAsync(async () =>
+        await Page.RunAndWaitForResponseAsync(async () =>
         {
             await CreateButton.Click();
         }, x => x.Status is 200 or 400);
-        await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-        await _page.WaitForLoadStateAsync(LoadState.Load);
-        await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+        await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await Page.WaitForLoadStateAsync(LoadState.Load);
+        await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
     }
 
     public async Task FillForm(Room createRoomModel)
@@ -42,7 +37,7 @@ public class RoomsPage : BasePage
         await RoomPriceInput.FillAsync(createRoomModel.Price);
         if (string.IsNullOrEmpty(createRoomModel.RoomDetails)) return;
 
-        await _page.Locator(".form-check-label", new PageLocatorOptions { HasTextString = createRoomModel.RoomDetails }).ClickAsync();
+        await Page.Locator(".form-check-label", new PageLocatorOptions { HasTextString = createRoomModel.RoomDetails }).ClickAsync();
     }
 
     public async Task<Room> GetLastCreatedRoomDetails()

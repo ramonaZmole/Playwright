@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model.ApiModels;
+using PlaywrightMsTest.Pages;
 
 namespace PlaywrightMsTest.Tests.Admin;
 
@@ -9,6 +10,11 @@ public class ReportTests : BaseTest
 {
     private CreateRoomOutput _createRoomOutput;
     private CreateBookingInput _bookingInput;
+
+
+    private readonly LoginPage _loginPage = new();
+    private readonly AdminHeaderPage _adminHeaderPage = new();
+    private readonly ReportPage _reportPage = new();
 
     [TestInitialize]
     public override async Task Before()
@@ -26,13 +32,13 @@ public class ReportTests : BaseTest
     [TestMethod]
     public async Task WhenViewingReports_BookedRoomsShouldBeDisplayedTest()
     {
-        await Browser.GoTo(Constants.AdminUrl);
+        await GoToAsync(Constants.AdminUrl);
 
-        await LoginPage.Login();
-        await AdminHeaderPage.GoToMenu(Helpers.Model.Menu.Report);
+        await _loginPage.Login();
+        await _adminHeaderPage.GoToMenu(Helpers.Model.Menu.Report);
 
         var bookingName = $"{_bookingInput.firstname} {_bookingInput.lastname}";
-        var displayed = await ReportPage.IsBookingDisplayed(bookingName, _createRoomOutput.roomName);
+        var displayed = await _reportPage.IsBookingDisplayed(bookingName, _createRoomOutput.roomName);
         displayed.Should().BeTrue();
     }
 

@@ -3,14 +3,10 @@ using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
 
-public class AdminHeaderPage
+public class AdminHeaderPage : BasePage
 {
-    private readonly IPage _page;
+    private ILocator MenuItems => Page.Locator(".mr-auto li a");
 
-
-    private ILocator MenuItems => _page.Locator(".mr-auto li a");
-
-    public AdminHeaderPage(IPage page) => _page = page;
 
     public async Task GoToMenu(Menu menuItem)
     {
@@ -31,7 +27,7 @@ public class AdminHeaderPage
             var text = await MenuItems.Nth(i).TextContentAsync();
 
             if (text == menuItem.ToString())
-                await _page.RunAndWaitForResponseAsync(async () =>
+                await Page.RunAndWaitForResponseAsync(async () =>
                 {
                     await MenuItems.Nth(i).ClickAsync();
                 }, x => x.Status == 200);
