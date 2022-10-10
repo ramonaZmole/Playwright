@@ -3,27 +3,24 @@ using PlaywrightMsTest.Helpers.Model.ApiModels;
 using PlaywrightMsTest.Pages;
 
 
-[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+//[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 namespace PlaywrightMsTest.Helpers;
 
 public class BaseTest
 {
-    private IPage Page;
-    [ThreadStatic]
-    protected static BasePage BasePage;
-
     public Task<IAPIRequestContext> RequestContext = ApiHelpers.GetRequestContext();
 
     public TestContext TestContext { get; set; }
+    //   private Browser b;
 
 
 
     [TestInitialize]
     public virtual async Task Before()
     {
-        Page = await Browser.InitializePlaywright();
-        BasePage = new BasePage();
-        BasePage.SetPage(Page);
+        await Browser.InitializePlaywright();
+        //   BasePage = new BasePage();
+        //   BasePage.SetPage(Page);
         RequestContext = ApiHelpers.GetRequestContext(new Dictionary<string, string>
         {
             { "cookie", $"token={await GetLoginToken()}" }
@@ -40,7 +37,7 @@ public class BaseTest
             var screenshotsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Screenshots");
 
             var screenshotsPath = Path.Combine(screenshotsFolder, $"{TestContext.TestName}_{DateTime.Now:yyyyMMddHHmm}.png");
-            await Page.ScreenshotAsync(new PageScreenshotOptions { Path = screenshotsPath, FullPage = true });
+            await Browser.Page.ScreenshotAsync(new PageScreenshotOptions { Path = screenshotsPath, FullPage = true });
             TestContext.AddResultFile(screenshotsPath);
         }
         await Browser.Dispose();
@@ -55,7 +52,7 @@ public class BaseTest
 
     public async Task GoToAsync(string url)
     {
-        await Page.GotoAsync(url);
+        await Browser.Page.GotoAsync(url);
     }
 
 }

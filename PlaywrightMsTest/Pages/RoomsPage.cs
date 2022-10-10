@@ -9,24 +9,24 @@ public class RoomsPage : BasePage
 
     #region Selectors
 
-    private ILocator CreateButton => Page.Locator("#createRoom");
-    private ILocator RoomNumberInput => Page.Locator("#roomName");
-    private ILocator TypeDropdown => Page.Locator("#type");
-    private ILocator AccessibleDropdown => Page.Locator("#accessible");
-    private ILocator RoomPriceInput => Page.Locator("#roomPrice");
-    private ILocator LastRoomDetails => Page.Locator(".container .row.detail");
+    private ILocator CreateButton => Browser.Page.Locator("#createRoom");
+    private ILocator RoomNumberInput => Browser.Page.Locator("#roomName");
+    private ILocator TypeDropdown => Browser.Page.Locator("#type");
+    private ILocator AccessibleDropdown => Browser.Page.Locator("#accessible");
+    private ILocator RoomPriceInput => Browser.Page.Locator("#roomPrice");
+    private ILocator LastRoomDetails => Browser.Page.Locator(".container .row.detail");
 
     #endregion
 
     public async Task CreateRoom()
     {
-        await Page.RunAndWaitForResponseAsync(async () =>
+        await Browser.Page.RunAndWaitForResponseAsync(async () =>
         {
             await CreateButton.Click();
         }, x => x.Status is 200 or 400);
-        await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-        await Page.WaitForLoadStateAsync(LoadState.Load);
-        await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+        await Browser.Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        await Browser.Page.WaitForLoadStateAsync(LoadState.Load);
+        await Browser.Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
     }
 
     public async Task FillForm(Room createRoomModel)
@@ -37,7 +37,7 @@ public class RoomsPage : BasePage
         await RoomPriceInput.FillAsync(createRoomModel.Price);
         if (string.IsNullOrEmpty(createRoomModel.RoomDetails)) return;
 
-        await Page.Locator(".form-check-label", new PageLocatorOptions { HasTextString = createRoomModel.RoomDetails }).ClickAsync();
+        await Browser.Page.Locator(".form-check-label", new PageLocatorOptions { HasTextString = createRoomModel.RoomDetails }).ClickAsync();
     }
 
     public async Task<Room> GetLastCreatedRoomDetails()

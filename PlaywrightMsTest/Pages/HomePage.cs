@@ -8,25 +8,25 @@ public class HomePage : CalendarPage
 {
     #region Selectors
 
-    private ILocator Descriptions => Page.Locator(".row.hotel-room-info p");
-    private ILocator BookThisRoomButtons => Page.Locator(".row.hotel-room-info button");
+    private ILocator Descriptions => Browser.Page.Locator(".row.hotel-room-info p");
+    private ILocator BookThisRoomButtons => Browser.Page.Locator(".row.hotel-room-info button");
 
-    private ILocator FirstNameInput => Page.Locator(".room-firstname");
-    private ILocator LastNameInput => Page.Locator(".room-lastname");
-    private ILocator EmailInput => Page.Locator(".room-email");
-    private ILocator PhoneInput => Page.Locator(".room-phone");
+    private ILocator FirstNameInput => Browser.Page.Locator(".room-firstname");
+    private ILocator LastNameInput => Browser.Page.Locator(".room-lastname");
+    private ILocator EmailInput => Browser.Page.Locator(".room-email");
+    private ILocator PhoneInput => Browser.Page.Locator(".room-phone");
 
-    private ILocator BookRoomButton => Page.Locator(".btn-outline-primary.book-room");
-    private ILocator CancelBookingButton => Page.Locator(".btn-outline-danger");
-    private ILocator Calendar => Page.Locator(".rbc-calendar");
-    private ILocator SuccessMessage => Page.Locator("text=Booking Successful!");
+    private ILocator BookRoomButton => Browser.Page.Locator(".btn-outline-primary.book-room");
+    private ILocator CancelBookingButton => Browser.Page.Locator(".btn-outline-danger");
+    private ILocator Calendar => Browser.Page.Locator(".rbc-calendar");
+    private ILocator SuccessMessage => Browser.Page.Locator("text=Booking Successful!");
 
     #endregion
 
 
     public async Task BookRoom()
     {
-        await Page.RunAndWaitForResponseAsync(async () =>
+        await Browser.Page.RunAndWaitForResponseAsync(async () =>
         {
             await BookRoomButton.Click();
         }, x => x.Status is 200 or 400 or 201 or 409);

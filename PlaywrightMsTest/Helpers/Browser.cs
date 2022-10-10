@@ -6,9 +6,16 @@ public class Browser
 {
     private static IBrowser? _browser;
 
+   
+    //  public Browser() => _page = Task.Run(InitializePlaywright);
+
+    [ThreadStatic]
+    public static IPage Page;
+
+
     public static async Task Dispose() => await _browser.CloseAsync();
 
-    public static async Task<IPage> InitializePlaywright()
+    public static async Task InitializePlaywright()
     {
         var playwright = await Playwright.CreateAsync();
 
@@ -23,8 +30,11 @@ public class Browser
             ViewportSize = ViewportSize.NoViewport
         });
 
-        return await context.NewPageAsync();
+        Page = await context.NewPageAsync();
+        //   return await context.NewPageAsync();
     }
 
-    // public async Task GoToAsync(string url) => await Page.GotoAsync(url);
+
+
+     public static async Task GoToAsync(string url) => await Page.GotoAsync(url);
 }

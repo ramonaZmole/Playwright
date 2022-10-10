@@ -1,11 +1,12 @@
 ﻿using Microsoft.Playwright;
+using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
 
 public class AdminHeaderPage : BasePage
 {
-    private ILocator MenuItems => Page.Locator(".mr-auto li a");
+    private ILocator MenuItems => Browser.Page.Locator(".mr-auto li a");
 
 
     public async Task GoToMenu(Menu menuItem)
@@ -27,7 +28,7 @@ public class AdminHeaderPage : BasePage
             var text = await MenuItems.Nth(i).TextContentAsync();
 
             if (text == menuItem.ToString())
-                await Page.RunAndWaitForResponseAsync(async () =>
+                await Browser.Page.RunAndWaitForResponseAsync(async () =>
                 {
                     await MenuItems.Nth(i).ClickAsync();
                 }, x => x.Status == 200);

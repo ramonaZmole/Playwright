@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using PlaywrightMsTest.Helpers;
 
 namespace PlaywrightMsTest.Pages
 {
@@ -6,11 +7,11 @@ namespace PlaywrightMsTest.Pages
     {
         public async Task SelectDates()
         {
-            var date = Page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = "17" }).First;
+            var date = Browser.Page.Locator(".rbc-date-cell button ", new PageLocatorOptions { HasTextString = "17" }).First;
             await date.ClickAsync();
-            await Page.Mouse.DownAsync();
-            await Page.Mouse.MoveAsync(100, 200);
-            await Page.Mouse.UpAsync();
+            await Browser.Page.Mouse.DownAsync();
+            await Browser.Page.Mouse.MoveAsync(100, 200);
+            await Browser.Page.Mouse.UpAsync();
         }
     }
 }

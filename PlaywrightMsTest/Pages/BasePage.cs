@@ -5,11 +5,11 @@ namespace PlaywrightMsTest.Pages;
 
 public class BasePage
 {
-    private static ILocator ErrorMessages => Page.Locator(".alert.alert-danger p");
+    private static ILocator ErrorMessages => Browser.Page.Locator(".alert.alert-danger p");
 
-    protected static IPage Page;
+   // protected static IPage Page;
 
-    public void SetPage(IPage page) => Page = page;
+ //   public void SetPage(IPage page) => Page = page;
 
     public async Task<List<string?>> GetErrorMessages() => await ErrorMessages.GetLocatorsText();
 

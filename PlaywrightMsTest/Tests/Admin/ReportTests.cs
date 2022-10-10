@@ -32,7 +32,7 @@ public class ReportTests : BaseTest
     [TestMethod]
     public async Task WhenViewingReports_BookedRoomsShouldBeDisplayedTest()
     {
-        await GoToAsync(Constants.AdminUrl);
+        await Browser.GoToAsync(Constants.AdminUrl);
 
         await _loginPage.Login();
         await _adminHeaderPage.GoToMenu(Helpers.Model.Menu.Report);
