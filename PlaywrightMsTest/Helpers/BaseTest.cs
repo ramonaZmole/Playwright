@@ -1,40 +1,63 @@
 ﻿using Microsoft.Playwright;
+using PlaywrightMsTest.Helpers.Model.ApiModels;
 using PlaywrightMsTest.Pages;
 
 
-//[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Workers = 4, Scope = ExecutionScope.MethodLevel)]
 namespace PlaywrightMsTest.Helpers;
 
 public class BaseTest
 {
-    private static IPage _page;
-
-
     public LoginPage LoginPage;
     public RoomsPage RoomsPage;
+    public AdminHeaderPage AdminHeaderPage;
+    public ReportPage ReportPage;
+    public HomePage HomePage;
 
+    public Browser Browser = new();
+
+    public Task<IAPIRequestContext> RequestContext = ApiHelpers.GetRequestContext();
+
+    public TestContext TestContext { get; set; }
 
     [TestInitialize]
-    public async Task Before()
+    public virtual async Task Before()
     {
-        Browser.InitializeDriver(true);
-        _page = await Browser.WebDriver.NewPageAsync();
-        //  _page = await Browser.InitializePage();
-        //   await page.SetViewportSizeAsync(1920, 1080);
         InitializePages();
+        RequestContext = ApiHelpers.GetRequestContext(new Dictionary<string, string>
+        {
+            { "cookie", $"token={await GetLoginToken()}" }
+        });
     }
 
-
     [TestCleanup]
-    public async Task After() => await Browser.Dispose();
+    public virtual async Task After()
+    {
+        if (TestContext.CurrentTestOutcome.Equals(UnitTestOutcome.Failed))
+        {
+            var screenshotsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Screenshots");
 
-
-    public static async Task GoTo(string url) => await _page.GotoAsync(url);
-
+            var screenshotsPath = Path.Combine(screenshotsFolder, $"{TestContext.TestName}_{DateTime.Now:yyyyMMddHHmm}.png");
+            await Browser.Page.ScreenshotAsync(new PageScreenshotOptions { Path = screenshotsPath, FullPage = true });
+            TestContext.AddResultFile(screenshotsPath);
+        }
+        await Browser.Dispose();
+    }
 
     private void InitializePages()
     {
-        LoginPage = new LoginPage(_page);
-        RoomsPage = new RoomsPage(_page);
+        LoginPage = new LoginPage(Browser.Page);
+        RoomsPage = new RoomsPage(Browser.Page);
+        AdminHeaderPage = new AdminHeaderPage(Browser.Page);
+        ReportPage = new ReportPage(Browser.Page);
+        HomePage = new HomePage(Browser.Page);
     }
+
+    private async Task<string> GetLoginToken()
+    {
+        var response = await RequestContext.Result.PostAsync(ApiResource.Login, new APIRequestContextOptions { DataObject = new LoginInput() });
+        var cookie = response.Headers.FirstOrDefault(x => x.Key.Contains("cookie")).Value;
+        return cookie.Split("=")[1].Split(";")[0];
+    }
+
 }

@@ -1,6 +1,6 @@
 ﻿namespace PlaywrightMsTest.Helpers.Model;
 
-public class UserModel
+public class User
 {
     public string FirstName { get; set; } = Faker.Name.First();
     public string LastName { get; set; } = Faker.Name.Last();

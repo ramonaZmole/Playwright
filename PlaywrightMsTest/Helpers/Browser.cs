@@ -2,29 +2,34 @@
 
 namespace PlaywrightMsTest.Helpers;
 
-public static class Browser
+public class Browser
 {
-    [ThreadStatic]
-    public static IBrowser WebDriver;
+    private readonly Task<IPage> _page;
+    private IBrowser? _browser;
 
-    public static void InitializeDriver(bool headless = false)
-    {
-        WebDriver = headless == false ? Task.Run(() => GetBrowserAsync(headless: false)).Result
-            : Task.Run(() => GetBrowserAsync(headless: true)).Result;
-    }
+    public Browser() => _page = Task.Run(InitializePlaywright);
 
-    private static async Task<IBrowser> GetBrowserAsync(bool headless = false)
+    public IPage Page => _page.Result;
+
+    public async Task Dispose() => await _browser.CloseAsync();
+
+    private async Task<IPage> InitializePlaywright()
     {
         var playwright = await Playwright.CreateAsync();
 
-        IBrowser browser;
 
-        if (headless)
-            browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
-        else
-            browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, SlowMo = 1000 });
-        return browser;
+        _browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = true,
+            Args = new[] { "--start-maximized" }
+        });
+        var context = await _browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            ViewportSize = ViewportSize.NoViewport
+        });
+
+        return await context.NewPageAsync();
     }
 
-    public static async Task Dispose() => await WebDriver.CloseAsync();
+    public async Task GoTo(string url) => await Page.GotoAsync(url);
 }
