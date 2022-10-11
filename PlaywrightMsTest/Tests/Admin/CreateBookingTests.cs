@@ -29,7 +29,7 @@ namespace PlaywrightMsTest.Tests.Admin
         [TestMethod]
         public async Task WhenBookingARoom_BookingShouldBeDisplayedTest()
         {
-            await GoToAsync(Constants.AdminUrl);
+            await Browser.GoToAsync(Constants.AdminUrl);
 
             await _loginPage.Login();
             await _adminHeaderPage.GoToMenu(Menu.Report);

@@ -2,11 +2,11 @@
 
 namespace PlaywrightMsTest.Helpers;
 
-public class Browser
+public static class Browser
 {
     private static IBrowser? _browser;
 
-   
+
     //  public Browser() => _page = Task.Run(InitializePlaywright);
 
     [ThreadStatic]
@@ -36,5 +36,5 @@ public class Browser
 
 
 
-     public static async Task GoToAsync(string url) => await Page.GotoAsync(url);
+    public static async Task GoToAsync(string url) => await Page.GotoAsync(url);
 }
