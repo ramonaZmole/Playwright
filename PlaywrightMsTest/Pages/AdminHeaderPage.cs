@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
@@ -15,26 +16,25 @@ public class AdminHeaderPage
     public async Task GoToMenu(Menu menuItem)
     {
         //1
-        //  var menus = await MenuItems.GetElements();
-        //  var resul = menus.AsQueryable();
-        ////  await resul.FirstOrDefaultAsync(x => x.TextContentAsync().Equals(menuItem.ToString()));
+        //for (var i = 0; i < await MenuItems.CountAsync(); i++)
+        //{
+        //    var text = await MenuItems.Nth(i).TextContentAsync();
 
-        //   await menus.FirstOrDefault(x =>
-        //   {
-        //       var result = x.TextContentAsync().Result;
-        //       return result != null && result.Equals(menuItem.ToString());
-        //   })?.ClickAsync()!;
+        //    if (text == menuItem.ToString())
+        //        await _page.RunAndWaitForResponseAsync(async () =>
+        //        {
+        //            await MenuItems.Nth(i).ClickAsync();
+        //        }, x => x.Status == 200);
+        //}
 
         //2
-        for (var i = 0; i < await MenuItems.CountAsync(); i++)
-        {
-            var text = await MenuItems.Nth(i).TextContentAsync();
+        var menus = await MenuItems.GetElements();
 
-            if (text == menuItem.ToString())
-                await _page.RunAndWaitForResponseAsync(async () =>
-                {
-                    await MenuItems.Nth(i).ClickAsync();
-                }, x => x.Status == 200);
+        foreach (var menu in menus)
+        {
+            if (await menu.TextContentAsync() != menuItem.ToString()) continue;
+            await menu.ClickAsync();
+            await _page.WaitForResponseAsync(x => x.Status == 200);
         }
     }
 }
