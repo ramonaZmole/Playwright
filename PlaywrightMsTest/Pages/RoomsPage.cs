@@ -34,7 +34,7 @@ public class RoomsPage : BasePage
         await _page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
     }
 
-    public async Task FillForm(Room createRoomModel)
+    public async Task InsertRoomDetails(Room createRoomModel)
     {
         await RoomNumberInput.FillAsync(createRoomModel.RoomName);
         await TypeDropdown.SelectOptionAsync(createRoomModel.Type);

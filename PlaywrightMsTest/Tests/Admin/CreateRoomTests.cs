@@ -24,7 +24,7 @@ public class CreateRoomTests : BaseTest
         errorMessages.Should().Contain("must be greater than or equal to 1");
         errorMessages.Should().Contain("Room name must be set");
 
-        await RoomsPage.FillForm(_roomModel);
+        await RoomsPage.InsertRoomDetails(_roomModel);
         await RoomsPage.CreateRoom();
         var roomDetails = await RoomsPage.GetLastCreatedRoomDetails();
         roomDetails.Should().BeEquivalentTo(_roomModel);
@@ -39,7 +39,7 @@ public class CreateRoomTests : BaseTest
         await Browser.GoTo(Constants.AdminUrl);
         await LoginPage.Login();
 
-        await RoomsPage.FillForm(_roomModel);
+        await RoomsPage.InsertRoomDetails(_roomModel);
         await RoomsPage.CreateRoom();
         // RoomsPage.GetLastCreatedRoomDetails().Result.RoomDetails.Should().Be("No features added to the room");
 
