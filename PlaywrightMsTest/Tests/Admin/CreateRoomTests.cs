@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using PlaywrightMsTest.Helpers;
 using PlaywrightMsTest.Helpers.Model.ApiModels;
+using PlaywrightMsTest.Pages;
 
 namespace PlaywrightMsTest.Tests.Admin;
 
@@ -14,19 +15,19 @@ public class CreateRoomTests : BaseTest
     public async Task WhenCreatingARoom_RoomShouldBeSavedTes()
     {
         await Browser.GoTo(Constants.AdminUrl);
-        await LoginPage.Login();
+        await LoginPage.GetInstance().Login();
 
-        await RoomsPage.CreateRoom();
-        var isErrorDisplayed = await RoomsPage.IsErrorMessageDisplayed();
+        await RoomsPage.GetInstance().CreateRoom();
+        var isErrorDisplayed = await RoomsPage.GetInstance().IsErrorMessageDisplayed();
         isErrorDisplayed.Should().BeTrue();
 
-        var errorMessages = await RoomsPage.GetErrorMessages();
+        var errorMessages = await RoomsPage.GetInstance().GetErrorMessages();
         errorMessages.Should().Contain("must be greater than or equal to 1");
         errorMessages.Should().Contain("Room name must be set");
 
-        await RoomsPage.FillForm(_roomModel);
-        await RoomsPage.CreateRoom();
-        var roomDetails = await RoomsPage.GetLastCreatedRoomDetails();
+        await RoomsPage.GetInstance().FillForm(_roomModel);
+        await RoomsPage.GetInstance().CreateRoom();
+        var roomDetails = await RoomsPage.GetInstance().GetLastCreatedRoomDetails();
         roomDetails.Should().BeEquivalentTo(_roomModel);
         //_roomsPage.GetLastCreatedRoomDetails().Result.Should().BeEquivalentTo(_roomModel); not working
     }
@@ -37,13 +38,13 @@ public class CreateRoomTests : BaseTest
         _roomModel.RoomDetails = string.Empty;
 
         await Browser.GoTo(Constants.AdminUrl);
-        await LoginPage.Login();
+        await LoginPage.GetInstance().Login();
 
-        await RoomsPage.FillForm(_roomModel);
-        await RoomsPage.CreateRoom();
+        await RoomsPage.GetInstance().FillForm(_roomModel);
+        await RoomsPage.GetInstance().CreateRoom();
         // RoomsPage.GetLastCreatedRoomDetails().Result.RoomDetails.Should().Be("No features added to the room");
 
-        var roomDetails = await RoomsPage.GetLastCreatedRoomDetails();
+        var roomDetails = await RoomsPage.GetInstance().GetLastCreatedRoomDetails();
         roomDetails.RoomDetails.Should().Be("No features added to the room");
     }
 

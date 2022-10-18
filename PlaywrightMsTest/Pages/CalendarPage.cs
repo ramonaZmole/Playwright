@@ -2,11 +2,11 @@
 
 namespace PlaywrightMsTest.Pages
 {
-    public class CalendarPage : BasePage
+    public class CalendarPage : WebPage<CalendarPage>
     {
-        private readonly IPage _page;
+        // private readonly IPage _page;
 
-        public CalendarPage(IPage page) : base(page) => _page = page;
+        //  public CalendarPage(IPage page) : base(page) => _page = page;
 
 
         public async Task SelectDates()

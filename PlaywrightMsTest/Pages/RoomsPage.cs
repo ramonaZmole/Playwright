@@ -4,10 +4,10 @@ using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
 
-public class RoomsPage : BasePage
+public class RoomsPage : WebPage<RoomsPage>
 {
 
-    private readonly IPage _page;
+   // private readonly IPage _page;
 
     #region Selectors
 
@@ -20,7 +20,7 @@ public class RoomsPage : BasePage
 
     #endregion
 
-    public RoomsPage(IPage page) : base(page) => _page = page;
+    //  public RoomsPage(IPage page) : base(page) => _page = page;
 
 
     public async Task CreateRoom()

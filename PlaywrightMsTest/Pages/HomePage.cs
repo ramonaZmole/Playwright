@@ -6,7 +6,7 @@ namespace PlaywrightMsTest.Pages;
 
 public class HomePage : CalendarPage
 {
-    private readonly IPage _page;
+  //  private readonly IPage _page;
 
     #region Selectors
 
@@ -25,7 +25,7 @@ public class HomePage : CalendarPage
 
     #endregion
 
-    public HomePage(IPage page) : base(page) => _page = page;
+  //  public HomePage(IPage page) : base(page) => _page = page;
 
 
     public async Task BookRoom()

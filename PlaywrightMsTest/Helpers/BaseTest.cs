@@ -8,13 +8,13 @@ namespace PlaywrightMsTest.Helpers;
 
 public class BaseTest
 {
-    public LoginPage LoginPage;
-    public RoomsPage RoomsPage;
-    public AdminHeaderPage AdminHeaderPage;
-    public ReportPage ReportPage;
-    public HomePage HomePage;
+    //public LoginPage LoginPage;
+    //public RoomsPage RoomsPage;
+    //public AdminHeaderPage AdminHeaderPage;
+    //public ReportPage ReportPage;
+    //public HomePage HomePage;
 
-    public Browser Browser = new();
+  //  public Browser Browser = new();
 
     public Task<IAPIRequestContext> RequestContext = ApiHelpers.GetRequestContext();
 
@@ -23,7 +23,8 @@ public class BaseTest
     [TestInitialize]
     public virtual async Task Before()
     {
-        InitializePages();
+        await Browser.StartBrowser();
+      //  InitializePages();
         RequestContext = ApiHelpers.GetRequestContext(new Dictionary<string, string>
         {
             { "cookie", $"token={await GetLoginToken()}" }
@@ -38,19 +39,19 @@ public class BaseTest
             var screenshotsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Screenshots");
 
             var screenshotsPath = Path.Combine(screenshotsFolder, $"{TestContext.TestName}_{DateTime.Now:yyyyMMddHHmm}.png");
-            await Browser.Page.ScreenshotAsync(new PageScreenshotOptions { Path = screenshotsPath, FullPage = true });
+            await Browser.GetPage().ScreenshotAsync(new PageScreenshotOptions { Path = screenshotsPath, FullPage = true });
             TestContext.AddResultFile(screenshotsPath);
         }
-        await Browser.Dispose();
+        await Browser.StopBrowser();
     }
 
     private void InitializePages()
     {
-        LoginPage = new LoginPage(Browser.Page);
-        RoomsPage = new RoomsPage(Browser.Page);
-        AdminHeaderPage = new AdminHeaderPage(Browser.Page);
-        ReportPage = new ReportPage(Browser.Page);
-        HomePage = new HomePage(Browser.Page);
+        //LoginPage = new LoginPage();
+        //RoomsPage = new RoomsPage();
+        //AdminHeaderPage = new AdminHeaderPage();
+        //ReportPage = new ReportPage();
+        //HomePage = new HomePage();
     }
 
     private async Task<string> GetLoginToken()

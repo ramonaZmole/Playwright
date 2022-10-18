@@ -16,11 +16,9 @@ public class ReportPage : CalendarPage
 
     #endregion
 
+    // private readonly IPage _page;
 
-
-    private readonly IPage _page;
-
-    public ReportPage(IPage page) : base(page) => _page = page;
+    // public ReportPage(IPage page) : base(page) => _page = page;
 
     public async Task<bool> IsBookingDisplayed(string name, int roomName)
     {

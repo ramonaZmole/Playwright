@@ -4,14 +4,14 @@ using PlaywrightMsTest.Helpers.Model;
 
 namespace PlaywrightMsTest.Pages;
 
-public class AdminHeaderPage
+public class AdminHeaderPage:WebPage<AdminHeaderPage>
 {
-    private readonly IPage _page;
+   // private readonly IPage _page;
 
 
     private ILocator MenuItems => _page.Locator(".mr-auto li a");
 
-    public AdminHeaderPage(IPage page) => _page = page;
+  //  public AdminHeaderPage(IPage page) => _page = page;
 
     public async Task GoToMenu(Menu menuItem)
     {
