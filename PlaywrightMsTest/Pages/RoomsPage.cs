@@ -47,6 +47,7 @@ public class RoomsPage : BasePage
 
     public async Task<Room> GetLastCreatedRoomDetails()
     {
+        await _page.WaitForTimeoutAsync(100);
         await LastRoomDetails.WaitForLocator(WaitForSelectorState.Visible);
         await LastRoomDetails.First.WaitForAsync(new LocatorWaitForOptions { State = WaitForSelectorState.Attached, Timeout = 200 });
 
